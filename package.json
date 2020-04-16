@@ -1,0 +1,42 @@
+{
+  "name": "okaprendeingles",
+  "version": "0.0.1",
+  "description": "Proyecto OK Aprende Ingles",
+  "productName": "OkAprendeIngles",
+  "cordovaId": "com.okaprendeingles.app",
+  "capacitorId": "",
+  "author": "Gabriel Angel Pinto C.",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.vue src",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "@websanova/vue-auth": "^2.21.15-beta",
+    "axios": "^0.18.1",
+    "cryptr": "^6.0.1",
+    "lottie-vuejs": "0.3.6",
+    "quasar": "^1.0.0",
+    "vue-axios": "^2.1.5",
+    "vue-i18n": "^8.0.0",
+    "vue-router": "^3.1.5",
+    "vuex-router-sync": "^5.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^1.0.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.10.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-vue": "^5.0.0"
+  },
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "appId": "com.okaprendeingles.app",
+  "appName": "OkAprendeIngles",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}

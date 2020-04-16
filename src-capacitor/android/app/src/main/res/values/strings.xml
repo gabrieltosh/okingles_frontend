@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">OkAprendeIngles</string>
+    <string name="title_activity_main">OkAprendeIngles</string>
+    <string name="package_name">com.okaprendeingles.app</string>
+    <string name="custom_url_scheme">com.okaprendeingles.app</string>
+</resources>

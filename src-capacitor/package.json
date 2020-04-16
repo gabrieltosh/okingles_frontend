@@ -1,0 +1,12 @@
+{
+  "name": "okaprendeingles",
+  "version": "0.0.1",
+  "description": "Proyecto OK Aprende Ingles",
+  "author": "Gabriel Angel Pinto C.",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^1.5.0",
+    "@capacitor/cli": "^1.0.0",
+    "@capacitor/core": "^1.0.0"
+  }
+}

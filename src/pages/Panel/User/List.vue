@@ -1,0 +1,356 @@
+<template>
+<div>
+    <div class="q-px-md q-pt-md q-gutter-sm">
+        <q-breadcrumbs>
+            <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
+            <q-breadcrumbs-el label="Usuarios" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
+            <q-breadcrumbs-el label="Lista" to="/vue-components/breadcrumbs" />
+        </q-breadcrumbs>
+    </div>
+    <div class="q-pa-md">
+        <q-table :filter="search" :data="data" :columns="columns" row-key="name">
+            <template v-slot:top>
+                <div class="text-subtitle1">Usuarios</div>
+                <q-space />
+                <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+                <q-space />
+                <q-input borderless dense v-model="search" placeholder="Buscar">
+                    <template v-slot:append>
+                        <q-icon name="eva-search-outline" />
+                    </template>
+                </q-input>
+            </template>
+            <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                    <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
+                    <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                </q-td>
+            </template>
+            <template v-slot:body-cell-actions="props">
+                <q-td :props="props">
+                    <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
+                    <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
+                    <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
+                </q-td>
+            </template>
+            <template v-slot:body-cell-module="props">
+                <q-td :props="props">
+                    <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
+                </q-td>
+            </template>
+        </q-table>
+        <q-dialog v-model="show.data" transition-show="scale" transition-hide="scale">
+            <q-card style="width: 700px">
+                <q-card-section class="bg-teal text-white">
+                    <div class="text-h6">{{user.name+' '+user.lastname}}</div>
+                </q-card-section>
+                <q-card-section class="q-pa-none q-ma-none">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <q-img style="height: 169px; width: 280px" :src="$values.api+'app/uploads/'+user.image" />
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <q-card-section class="q-pb-none ">
+                                <q-list>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Ocupación</q-item-label>
+                                            <q-item-label>{{user.occupation}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+
+                                        <q-item-section>
+                                            <q-item-label caption>Cumpleaños</q-item-label>
+                                            <q-item-label>{{user.birthdate}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Celular</q-item-label>
+                                            <q-item-label>{{user.phone}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-card-section>
+                        </div>
+                    </div>
+                </q-card-section>
+                <q-card-section class="q-pa-none q-ma-none">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <q-card-section class="q-py-none ">
+                                <q-list>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Fecha Finalización</q-item-label>
+                                            <q-item-label>{{user.due_date}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Factura</q-item-label>
+                                            <q-item-label>{{user.invoice}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Sucursal</q-item-label>
+                                            <q-item-label>{{user.branch_office?user.branch_office.name:'Sin Sucursal'}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Tipo de Usuario</q-item-label>
+                                            <q-item-label>{{user.type}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-card-section>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <q-card-section class="q-py-none ">
+                                <q-list>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Correo</q-item-label>
+                                            <q-item-label>{{user.email}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Registro</q-item-label>
+                                            <q-item-label>{{user.registter}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Perfil</q-item-label>
+                                            <q-item-label>{{user.profile?user.profile.name:'Sin Perfil'}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                     <q-item>
+                            <q-item-section avatar>
+                                <q-icon color="primary" name="eva-edit-outline" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label caption>Direccion</q-item-label>
+                                <q-item-label>{{user.address}}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                                </q-list>
+                            </q-card-section>
+                        </div>
+                    </div>
+                </q-card-section>
+                <q-card-actions align="center" class="text-teal q-pt-none">
+                    <q-btn flat v-close-popup>
+                        Cerrar
+                    </q-btn>
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+    </div>
+</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      columns: [{
+        name: 'index',
+        label: '#',
+        field: 'index'
+      },
+      {
+        name: 'name',
+        required: true,
+        label: 'Nombre(s)',
+        align: 'center',
+        field: row => row.name,
+        format: val => `${val}`,
+        sortable: true
+      },
+      {
+        name: 'lastname',
+        align: 'center',
+        label: 'Apellido(s)',
+        field: 'lastname',
+        sortable: true
+      },
+      {
+        name: 'email',
+        align: 'center',
+        label: 'Correo Electronico',
+        field: 'email',
+        sortable: true
+      },
+      {
+        name: 'ci',
+        align: 'center',
+        label: 'Carnet Identidad',
+        field: 'ci',
+        sortable: true
+      },
+      {
+        name: 'status',
+        align: 'center',
+        label: 'Estado',
+        field: 'status',
+        sortable: true
+      },
+      {
+        name: 'created_at',
+        align: 'center',
+        label: 'Fecha de Creacion',
+        field: 'created_at',
+        sortable: true
+      },
+      {
+        name: 'actions',
+        label: 'Acciones',
+        field: '',
+        align: 'center'
+      }
+      ],
+      data: [],
+      search: null,
+      show: {
+        data: false
+      },
+      user: []
+    }
+  },
+  mounted () {
+    this.handleGetData()
+  },
+  methods: {
+    handleGetModule (row) {
+      if (row.sub_module) {
+        return row.sub_module.name
+      } else {
+        return 'Sin asignar'
+      }
+    },
+    handleShow (props) {
+      this.show.data = true
+      this.user = props.row
+      console.log(this.$values.api)
+    },
+    handleChangeStatus (props) {
+      this.$q.dialog({
+        title: 'Confirmar',
+        message: '¿ Cambiar estado de Usuario ?',
+        ok: {
+          color: 'primary',
+          label: 'Aceptar',
+          rounded: true,
+          size: 'sm'
+        },
+        cancel: {
+          label: 'Cancelar',
+          size: 'sm',
+          flat: true
+        },
+        persistent: true
+      }).onOk(() => {
+        var url = '/panel/user/get/status/' + props.row.id
+        this.$axios.get(url).then(reponse => {
+          this.handleGetData()
+          this.$q.notify({
+            color: 'positive',
+            message: '¡ Estado cambiado exitosamente !',
+            timeout: 500,
+            icon: 'eva-checkmark-circle-2-outline'
+          })
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    },
+    handleGetData () {
+      var url = '/panel/user/get/users'
+      this.$axios.get(url).then(response => {
+        this.data = response.data
+        this.data.forEach((row, index) => {
+          row.index = index + 1
+        })
+      })
+    },
+    handleEdit (props) {
+      this.$router.push({
+        name: 'user.edit',
+        params: {
+          data: props.row
+        }
+      })
+    },
+    handleDelete (props) {
+      this.$q.dialog({
+        title: 'Confirmar',
+        message: '¿ Eliminar el registro Usuario ?',
+        ok: {
+          color: 'primary',
+          label: 'Aceptar',
+          rounded: true,
+          size: 'sm'
+        },
+        cancel: {
+          label: 'Cancelar',
+          size: 'sm',
+          flat: true
+        },
+        persistent: true
+      }).onOk(() => {
+        var url = '/panel/user/delete/user/' + props.row.id
+        this.$axios.delete(url).then(response => {
+          this.$q.notify({
+            color: 'positive',
+            message: '¡ Usuario eliminado exitosamente !',
+            timeout: 500,
+            icon: 'eva-checkmark-circle-2-outline'
+          })
+          this.handleGetData()
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
+  }
+}
+</script>
