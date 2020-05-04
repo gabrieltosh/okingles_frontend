@@ -3,8 +3,7 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Perfiles" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Lista" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Perfiles"/>
         </q-breadcrumbs>
     </div>
     <div class="row q-pa-md">
@@ -257,7 +256,7 @@ export default {
         },
         persistent: true
       }).onOk(() => {
-        var url = '/panel/profile/delete/module/' + props.row.module_profile_id
+        var url = '/panel/profile/delete/module/' + props.row.id
         this.$axios.delete(url).then(reponse => {
           this.$q.notify({
             color: 'positive',

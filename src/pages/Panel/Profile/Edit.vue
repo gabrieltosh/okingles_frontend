@@ -3,8 +3,8 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Perfil" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Editar" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Perfil" :to="{name:'profile.list'}" />
+            <q-breadcrumbs-el label="Editar"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
@@ -23,14 +23,14 @@
                     </q-banner>
 
                     <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-4 q-pa-md">
+                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                             <q-input rounded dense v-model="data.name" label="Nombre" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']" >
                                 <template v-slot:prepend>
                                     <q-icon name="eva-edit-2-outline" />
                                 </template>
                             </q-input>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-4 q-pa-md">
+                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                             <q-input rounded dense v-model="data.description" label="Descripción" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
                                 <template v-slot:prepend>
                                     <q-icon name="eva-pin-outline" />

@@ -3,11 +3,11 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Sucursal" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Editar" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Sucursal" :to="{name:'branch.list'}" />
+            <q-breadcrumbs-el label="Editar"  />
         </q-breadcrumbs>
     </div>
-    <div class="q-pa-md">}
+    <div class="q-pa-md">
         <q-card class="my-card">
             <q-form @submit="handleUpdateBranchOffice" @reset="handleFormReset">
                 <q-card-section>

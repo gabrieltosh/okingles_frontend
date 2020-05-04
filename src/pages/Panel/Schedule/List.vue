@@ -14,7 +14,7 @@
             <q-card-section>
                 <div class="row">
                     <div class="col-6">
-                        <div class="text-subtitle1">Horario dia {{this.$route.params.day.name}}</div>
+                        <div class="text-subtitle1">Horario dia {{this.$route.params.day.name}} {{this.$route.params.day.day_date}}</div>
                     </div>
                     <div class="col-6">
                         <q-btn class="float-right" @click="create = true" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
@@ -43,7 +43,9 @@
                                             </div>
                                         </q-img>
                                         <q-card-actions align="center">
-                                            <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
+                                            <template v-if="schedule.valid">
+                                              <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
+                                            </template>
                                             <q-btn v-if="schedule.assigned==0" dense @click="handleDeleteWeek(schedule)" round color="red" size="sm" icon="eva-trash-2-outline"></q-btn>
                                             <q-btn dense @click="handleGetStudent(schedule)" round color="primary" size="sm" icon="eva-list-outline"></q-btn>
                                         </q-card-actions>
@@ -110,7 +112,9 @@
                         <div class="text-h6">{{data.schedule.day.name}}</div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">
-                        <q-btn class="q-mt-xs" @click="handleAddStudent()" rounded color="green-14" size="sm" icon="las la-user-plus">&nbsp;Añadir Estudiante</q-btn>
+                        <template v-if="parseInt(data.schedule.number_student)!==parseInt(data.schedule.assigned)">
+                            <q-btn v-if="data.schedule.valid" class="q-mt-xs" @click="handleAddStudent()" rounded color="green-14" size="sm" icon="las la-user-plus">&nbsp;Añadir Estudiante</q-btn>
+                        </template>
                     </div>
                 </div>
             </q-card-section>
@@ -244,7 +248,7 @@
             </q-card-section>
             <q-card-actions align="center" class="bg-white text-teal">
                 <q-btn flat label="Cancelar" v-close-popup />
-                <q-btn label="Añadir" color="primary" />
+                <q-btn @click="handleStoreStudent()" label="Añadir" color="primary" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -283,7 +287,8 @@ export default {
         lessons: [],
         students: [],
         optionsStudent: [],
-        student_id: null
+        student_id: null,
+        time: []
       },
       create: false,
       update: false,
@@ -416,6 +421,7 @@ export default {
     },
     handleGetStudent (schedule) {
       var url = '/panel/schedule/get/students/' + schedule.id
+      this.data.time = schedule.time
       this.handleGetSchedule(schedule.id)
       this.$axios.get(url).then(response => {
         this.data.assignments = response.data
@@ -489,6 +495,7 @@ export default {
         var url = '/panel/schedule/delete/student/' + item.id
         this.$axios.delete(url).then(response => {
           this.handleGetStudent(this.data.schedule)
+          this.handleGetSchedule(this.data.schedule.id)
           this.$q.notify({
             color: 'positive',
             message: '¡ Reserva eliminada correctamente !',
@@ -504,7 +511,7 @@ export default {
     },
     handleGetStudents () {
       this.data.students = []
-      var url = '/panel/schedule/get/student'
+      var url = '/panel/schedule/get/student/' + this.$route.params.branch.id
       this.$axios.get(url).then(response => {
         response.data.forEach((element, index) => {
           this.data.students.push({
@@ -528,6 +535,44 @@ export default {
       update(() => {
         const needle = val.toLowerCase()
         this.data.optionsStudent = this.data.students.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    handleStoreStudent () {
+      var url = '/panel/schedule/store/assignment'
+      this.$axios.post(url, {
+        schedule_id: this.data.schedule.id,
+        student_id: this.data.student_id,
+        time_id: this.data.time.id,
+        day_id: this.$route.params.day.id
+      }).then(response => {
+        if (response.data === 1) {
+          this.$q.notify({
+            color: 'positive',
+            message: '¡ Estudiante añadido correctamente !',
+            timeout: 1000,
+            icon: 'eva-checkmark-circle-2-outline'
+          })
+        } else {
+          if (response.data === 2) {
+            this.$q.notify({
+              color: 'red',
+              message: '¡ La clase esta al limite de estudiantes !',
+              timeout: 1000,
+              icon: 'eva-checkmark-circle-2-outline'
+            })
+          } else {
+            this.$q.notify({
+              color: 'red',
+              message: '¡ El estudiante ya esta en una clase a esta hora!',
+              timeout: 1000,
+              icon: 'eva-checkmark-circle-2-outline'
+            })
+          }
+        }
+        this.addStudent = false
+        this.handleGetStudent(this.data.schedule)
+        this.handleGetSchedule(this.data.schedule.id)
+        this.data.student_id = null
       })
     }
   }

@@ -3,15 +3,15 @@
         <div class="q-px-md q-pt-md q-gutter-sm">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-                <q-breadcrumbs-el label="Horarios"  />
+                <q-breadcrumbs-el label="Habilidades"/>
             </q-breadcrumbs>
         </div>
         <div class="q-pa-md">
             <q-table :filter="search" title="Sucursales" :data="data" :columns="columns" row-key="name">
                 <template v-slot:top>
-                    <div class="text-subtitle1">Horas</div>
+                    <div class="text-subtitle1">Habilidades</div>
                     <q-space />
-                    <q-btn :to="{name:'time.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+                    <q-btn :to="{name:'skill.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
                     <q-space />
                     <q-input  borderless dense v-model="search" placeholder="Buscar"  >
                         <template v-slot:append>
@@ -49,17 +49,10 @@ export default {
         sortable: true
       },
       {
-        name: 'start',
+        name: 'description',
         align: 'center',
-        label: 'Inicio',
-        field: 'start',
-        sortable: true
-      },
-      {
-        name: 'end',
-        align: 'center',
-        label: 'Fin',
-        field: 'end',
+        label: 'Descripciòn',
+        field: row => row.description,
         sortable: true
       },
       {
@@ -85,7 +78,7 @@ export default {
   },
   methods: {
     handleGetData () {
-      var url = '/panel/time/get/time'
+      var url = '/panel/skill/get/skill'
       this.$axios.get(url).then(response => {
         this.data = response.data
         this.data.forEach((row, index) => {
@@ -94,7 +87,7 @@ export default {
       })
     },
     handleEdit (props) {
-      this.$router.push({ name: 'time.edit', params: { data: props.row } })
+      this.$router.push({ name: 'skill.edit', params: { skill: props.row } })
     },
     handleDelete (props) {
       this.$q.dialog({
@@ -113,11 +106,11 @@ export default {
         },
         persistent: true
       }).onOk(() => {
-        var url = '/panel/time/delete/time/' + props.row.id
+        var url = '/panel/skill/delete/skill/' + props.row.id
         this.$axios.delete(url).then(response => {
           this.$q.notify({
             color: 'positive',
-            message: '¡ Hora eliminada exitosamente !',
+            message: '¡ Aula eliminada exitosamente !',
             timeout: 500,
             icon: 'eva-checkmark-circle-2-outline'
           })

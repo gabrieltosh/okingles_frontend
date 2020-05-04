@@ -11,8 +11,7 @@
             <q-card class="my-card">
                 <q-form @submit="handlePostTime" @reset="handleFormReset">
                     <q-card-section>
-                        <div class="text-subtitle1 text-primary">Crear Clase</div>
-
+                        <div class="text-subtitle1 text-primary">Crear Semana </div>
                         <q-banner v-if="show.errors" transition-show="flip-up" dense rounded inline-actions class="text-white bg-red q-pa-xs q-ma-sm">
                         <template v-slot:avatar>
                             <lottie-animation :width="50" :height="50" path="statics/lottie/error-flat-style.json" />

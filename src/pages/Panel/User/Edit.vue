@@ -3,8 +3,8 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Crear" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" :to="{name:'user.list'}" />
+            <q-breadcrumbs-el label="Editar"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
@@ -190,7 +190,7 @@ export default {
         registter: this.$route.params.data.registter,
         image: null,
         profile_id: this.$route.params.data.profile_id,
-        banch_office_id: this.$route.params.data.banch_office_id,
+        branch_office_id: this.$route.params.data.branch_office_id,
         type: this.$route.params.data.type
       },
       profiles: [],

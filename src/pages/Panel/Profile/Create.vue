@@ -3,8 +3,8 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Perfil" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Crear" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Perfiles" :to="{name:'profile.list'}" />
+            <q-breadcrumbs-el label="Crear" />
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">

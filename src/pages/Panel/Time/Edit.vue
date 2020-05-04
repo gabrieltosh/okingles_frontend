@@ -3,8 +3,8 @@
         <div class="q-px-md q-pt-md q-gutter-sm">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-                <q-breadcrumbs-el label="Hora" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-                <q-breadcrumbs-el label="Editar" to="/vue-components/breadcrumbs" />
+                <q-breadcrumbs-el label="Horas"  :to="{name:'time.list'}" />
+                <q-breadcrumbs-el label="Editar" />
             </q-breadcrumbs>
         </div>
         <div class="q-pa-md">
@@ -30,6 +30,9 @@
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                                 <q-input  label="Inicio" rounded dense v-model="data.start" mask="time" :rules="['time']">
+                                    <template v-slot:prepend>
+                                      <q-icon name="eva-edit-2-outline" />
+                                  </template>
                                   <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                       <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -41,6 +44,9 @@
                             </div>
                              <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                                  <q-input  label="Fin" rounded dense v-model="data.end" mask="time" :rules="['time']">
+                                       <template v-slot:prepend>
+                                        <q-icon name="eva-edit-2-outline" />
+                                    </template>
                                   <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                       <q-popup-proxy transition-show="scale" transition-hide="scale">

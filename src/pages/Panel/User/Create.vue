@@ -3,13 +3,13 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Crear" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" :to="{name:'user.list'}" />
+            <q-breadcrumbs-el label="Crear"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
         <q-card class="my-card">
-            <q-form @submit="HandlePostUser" @reset="handleFormReset">
+            <q-form ref="create" @submit="HandlePostUser" @reset="handleFormReset">
                 <q-card-section>
                     <div class="text-subtitle1 text-primary">Crear Usuario</div>
                     <q-banner v-if="show.errors" transition-show="flip-up" dense rounded inline-actions class="text-white bg-red q-pa-xs q-ma-sm">
@@ -167,6 +167,9 @@
             </q-form>
         </q-card>
     </div>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
+    </q-page-sticky>
 </div>
 </template>
 
@@ -269,8 +272,27 @@ export default {
     },
     handleFormReset () {
       this.data.name = null
-      this.data.city = null
+      this.data.lastname = null
+      this.data.ci = null
+      this.data.email = null
+      this.data.occupation = null
       this.data.address = null
+      this.data.password = null
+      this.data.birthdate = null
+      this.data.due_date = null
+      this.data.phone = null
+      this.data.invoice = null
+      this.data.registter = null
+      this.data.image = null
+      this.data.profile_id = null
+      this.data.banch_office_id = null
+      this.data.type = null
+    },
+    handleReload () {
+      this.HandleGetProfile()
+      this.HandleGetBranchOffice()
+      this.$refs.create.resetValidation()
+      this.handleFormReset()
     }
   }
 }

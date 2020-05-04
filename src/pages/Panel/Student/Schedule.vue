@@ -144,9 +144,11 @@
                 <q-btn flat v-close-popup>
                     Cerrar
                 </q-btn>
-                <div v-if="parseInt(data.schedule.number_student)!==parseInt(data.schedule.assigned)">
-                  <q-btn  v-if="!data.schedule.used" @click="handleStoreAssignment" icon="eva-checkmark-circle-outline" color="green-14" label="Reservar" />
-                </div>
+                <template v-if="data.schedule.valid">
+                  <template v-if="parseInt(data.schedule.number_student)!==parseInt(data.schedule.assigned)">
+                    <q-btn  v-if="!data.schedule.used" @click="handleStoreAssignment" icon="eva-checkmark-circle-outline" color="green-14" label="Reservar" />
+                  </template>
+                </template>
             </q-card-actions>
         </q-card>
     </q-dialog>

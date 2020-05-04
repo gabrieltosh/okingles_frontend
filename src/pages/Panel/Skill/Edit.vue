@@ -3,15 +3,15 @@
         <div class="q-px-md q-pt-md q-gutter-sm">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-                <q-breadcrumbs-el label="Aulas" icon="eva-map-outline" :to="{name:'classroom.list'}" />
-                <q-breadcrumbs-el label="Crear" />
+                <q-breadcrumbs-el label="Habilidades" icon="eva-map-outline" :to="{name:'skill.list'}" />
+                <q-breadcrumbs-el label="Crear" to="/vue-components/breadcrumbs" />
             </q-breadcrumbs>
         </div>
         <div class="q-pa-md">
             <q-card class="my-card">
-                <q-form @submit="handlePostClassroom" @reset="handleFormReset">
+                <q-form @submit="handleUpdateSkill" @reset="handleFormReset">
                     <q-card-section>
-                        <div class="text-subtitle1 text-primary">Crear Aula</div>
+                        <div class="text-subtitle1 text-primary">Editar Clase</div>
 
                         <q-banner v-if="show.errors" transition-show="flip-up" dense rounded inline-actions class="text-white bg-red q-pa-xs q-ma-sm">
                         <template v-slot:avatar>
@@ -31,24 +31,16 @@
                                 </q-input>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                                 <q-select
-                                    dense
-                                    v-model="data.branch_office_id"
-                                    :options="branches"
-                                    label="Sucursal"
-                                    emit-value
-                                    map-options
-                                    clearable rounded
-                                >
-                                <template v-slot:prepend>
-                                        <q-icon name="eva-home-outline" />
+                                <q-input rounded dense v-model="data.description" label="Descripción" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                                    <template v-slot:prepend>
+                                        <q-icon name="eva-pin-outline" />
                                     </template>
-                                </q-select>
+                                </q-input>
                             </div>
                         </div>
                         <div align="center">
-                            <q-btn :to="{name:'classroom.list'}" label="Cancelar" type="reset" color="primary" flat />
-                            <q-btn rounded label="Crear" type="submit" color="primary" />
+                            <q-btn :to="{name:'skill.list'}" label="Cancelar" type="reset" color="primary" flat />
+                            <q-btn rounded label="Actualizar" type="submit" color="primary" />
                         </div>
                     </q-card-section>
                 </q-form>
@@ -62,27 +54,24 @@ export default {
   data () {
     return {
       data: {
-        name: null,
-        branch_office_id: null
+        name: this.$route.params.skill.name,
+        description: this.$route.params.skill.description,
+        id: this.$route.params.skill.id
       },
       errors: [],
       show: {
         errors: false
-      },
-      branches: []
+      }
     }
   },
-  mounted () {
-    this.handleGetBranchOffice()
-  },
   methods: {
-    handlePostClassroom () {
-      var url = '/panel/classroom/post/classroom'
+    handleUpdateSkill () {
+      var url = '/panel/skill/update/skill'
       this.$axios.post(url, this.data).then(response => {
-        this.$router.push({ name: 'classroom.list' })
+        this.$router.push({ name: 'skill.list' })
         this.$q.notify({
           color: 'positive',
-          message: '¡ Aula creado exitosamente !',
+          message: '¡ Habilidad actualizada exitosamente !',
           icon: 'eva-checkmark-circle-2-outline',
           progress: true
         })
@@ -91,18 +80,10 @@ export default {
         this.show.errors = true
       })
     },
-    handleGetBranchOffice () {
-      var url = '/panel/user/get/branch'
-      this.$axios.get(url).then(response => {
-        response.data.forEach((element, index) => {
-          this.branches.push({ value: element.id, label: element.name })
-        })
-      })
-    },
     handleFormReset () {
       this.data.name = null
-      this.data.city = null
-      this.data.address = null
+      this.data.description = null
+      this.data.id = null
     }
   }
 }

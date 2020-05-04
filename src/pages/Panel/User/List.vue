@@ -3,42 +3,159 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuarios" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-            <q-breadcrumbs-el label="Lista" to="/vue-components/breadcrumbs" />
+            <q-breadcrumbs-el label="Usuarios"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
-        <q-table :filter="search" :data="data" :columns="columns" row-key="name">
-            <template v-slot:top>
-                <div class="text-subtitle1">Usuarios</div>
-                <q-space />
-                <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
-                <q-space />
-                <q-input borderless dense v-model="search" placeholder="Buscar">
-                    <template v-slot:append>
-                        <q-icon name="eva-search-outline" />
-                    </template>
-                </q-input>
-            </template>
-            <template v-slot:body-cell-status="props">
-                <q-td :props="props">
-                    <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
-                    <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-actions="props">
-                <q-td :props="props">
-                    <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
-                    <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
-                    <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-module="props">
-                <q-td :props="props">
-                    <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
-                </q-td>
-            </template>
-        </q-table>
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+      <div v-if="show.students">
+        <q-card>
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="students" label="Estudiantes" />
+            <q-tab name="teachers" label="Docentes" />
+            <q-tab name="admins" label="Administradores" />
+          </q-tabs>
+          <q-separator />
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="students">
+                <q-table :filter="search.students" :data="data.students" :columns="columns" row-key="name">
+                  <template v-slot:top>
+                      <div class="text-subtitle1">Estudiantes</div>
+                      <q-space />
+                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+                      <q-space />
+                      <q-input borderless dense v-model="search.students" placeholder="Buscar">
+                          <template v-slot:append>
+                              <q-icon name="eva-search-outline" />
+                          </template>
+                      </q-input>
+                  </template>
+                  <template v-slot:body-cell-status="props">
+                      <q-td :props="props">
+                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
+                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-actions="props">
+                      <q-td :props="props">
+                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
+                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
+                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-module="props">
+                      <q-td :props="props">
+                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
+                      </q-td>
+                  </template>
+                </q-table>
+            </q-tab-panel>
+            <q-tab-panel name="teachers">
+               <q-table :filter="search.teachers" :data="data.teachers" :columns="columns" row-key="name">
+                  <template v-slot:top>
+                      <div class="text-subtitle1">Docentes</div>
+                      <q-space />
+                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+                      <q-space />
+                      <q-input borderless dense v-model="search.teachers" placeholder="Buscar">
+                          <template v-slot:append>
+                              <q-icon name="eva-search-outline" />
+                          </template>
+                      </q-input>
+                  </template>
+                  <template v-slot:body-cell-status="props">
+                      <q-td :props="props">
+                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
+                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-actions="props">
+                      <q-td :props="props">
+                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
+                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
+                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-module="props">
+                      <q-td :props="props">
+                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
+                      </q-td>
+                  </template>
+              </q-table>
+            </q-tab-panel>
+            <q-tab-panel name="admins">
+                <q-table :filter="search.admins" :data="data.admins" :columns="columns" row-key="name">
+                  <template v-slot:top>
+                      <div class="text-subtitle1">Administradores</div>
+                      <q-space />
+                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+                      <q-space />
+                      <q-input borderless dense v-model="search.admins" placeholder="Buscar">
+                          <template v-slot:append>
+                              <q-icon name="eva-search-outline" />
+                          </template>
+                      </q-input>
+                  </template>
+                  <template v-slot:body-cell-status="props">
+                      <q-td :props="props">
+                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
+                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-actions="props">
+                      <q-td :props="props">
+                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
+                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
+                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
+                      </q-td>
+                  </template>
+                  <template v-slot:body-cell-module="props">
+                      <q-td :props="props">
+                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
+                      </q-td>
+                  </template>
+              </q-table>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
+      </div>
+      <div v-else>
+        <q-card style="max-width: 100%">
+          <q-card-section>
+            <q-skeleton type="rect" animation="pulse"/>
+          </q-card-section>
+          <q-separator />
+            <q-card-section>
+              <div class="row items-center justify-between no-wrap">
+            <div class="row items-center">
+                <q-skeleton type="rect" animation="pulse" width="150px"/>
+            </div>
+
+            <div class="row items-center">
+               <q-skeleton type="rect" animation="pulse" width="150px"/>
+            </div>
+
+            <div class="row items-center">
+                <q-skeleton type="rect" animation="pulse" width="150px"/>
+            </div>
+          </div>
+            </q-card-section>
+          <q-skeleton height="300px" animation="pulse" square />
+        </q-card>
+      </div>
+        </transition>
         <q-dialog v-model="show.data" transition-show="scale" transition-hide="scale">
             <q-card style="width: 700px">
                 <q-card-section class="bg-teal text-white">
@@ -181,6 +298,9 @@
             </q-card>
         </q-dialog>
     </div>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
+    </q-page-sticky>
 </div>
 </template>
 
@@ -244,12 +364,35 @@ export default {
         align: 'center'
       }
       ],
-      data: [],
-      search: null,
-      show: {
-        data: false
+      data: {
+        students: [],
+        teachers: [],
+        admins: []
       },
-      user: []
+      search: {
+        students: null,
+        teachers: null,
+        admins: null
+      },
+      show: {
+        data: false,
+        students: false
+      },
+      user: [],
+      tab: 'students',
+      loading: true,
+      number_process: 0
+    }
+  },
+  watch: {
+    number_process: function (newQuestion, oldQuestion) {
+      if (this.number_process === 3) {
+        this.loading = false
+        this.show.students = true
+      } else {
+        this.loading = true
+        this.show.students = false
+      }
     }
   },
   mounted () {
@@ -302,12 +445,27 @@ export default {
       })
     },
     handleGetData () {
-      var url = '/panel/user/get/users'
-      this.$axios.get(url).then(response => {
-        this.data = response.data
-        this.data.forEach((row, index) => {
+      var url = '/panel/user/get/users/'
+      this.$axios.get(url + 'admins').then(response => {
+        this.data.admins = response.data
+        this.data.admins.forEach((row, index) => {
           row.index = index + 1
         })
+        this.number_process++
+      })
+      this.$axios.get(url + 'teachers').then(response => {
+        this.data.teachers = response.data
+        this.data.teachers.forEach((row, index) => {
+          row.index = index + 1
+        })
+        this.number_process++
+      })
+      this.$axios.get(url + 'students').then(response => {
+        this.data.students = response.data
+        this.data.students.forEach((row, index) => {
+          row.index = index + 1
+        })
+        this.number_process++
       })
     },
     handleEdit (props) {
@@ -350,6 +508,10 @@ export default {
       }).onDismiss(() => {
         // console.log('I am triggered on both OK and Cancel')
       })
+    },
+    handleReload () {
+      this.number_process = 0
+      this.handleGetData()
     }
   }
 }

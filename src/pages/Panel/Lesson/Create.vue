@@ -3,15 +3,15 @@
         <div class="q-px-md q-pt-md q-gutter-sm">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-                <q-breadcrumbs-el label="Clase" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-                <q-breadcrumbs-el label="Crear" to="/vue-components/breadcrumbs" />
+                <q-breadcrumbs-el label="Grupo de Lecciones" icon="eva-map-outline" :to="{name:'lesson.list'}" />
+                <q-breadcrumbs-el label="Crear" />
             </q-breadcrumbs>
         </div>
         <div class="q-pa-md">
             <q-card class="my-card">
                 <q-form @submit="handlePostProfile" @reset="handleFormReset">
                     <q-card-section>
-                        <div class="text-subtitle1 text-primary">Crear Clase</div>
+                        <div class="text-subtitle1 text-primary">Crear Grupo de Lecciones</div>
 
                         <q-banner v-if="show.errors" transition-show="flip-up" dense rounded inline-actions class="text-white bg-red q-pa-xs q-ma-sm">
                         <template v-slot:avatar>

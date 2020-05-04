@@ -106,6 +106,25 @@ const routes = [
           { name: 'student.days', path: 'days', component: () => import('pages/Panel/Student/Days.vue') },
           { name: 'student.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Student/Schedule.vue') }
         ]
+      },
+      {
+        path: 'skill',
+        component: () => import('pages/Panel/Skill/Index.vue'),
+        children: [
+          { name: 'skill.list', path: 'list', component: () => import('pages/Panel/Skill/List.vue') },
+          { name: 'skill.create', path: 'create', component: () => import('pages/Panel/Skill/Create.vue') },
+          { name: 'skill.edit', path: 'edit/:skill', component: () => import('pages/Panel/Skill/Edit.vue') }
+        ]
+      },
+      {
+        path: 'teacher',
+        component: () => import('pages/Panel/Skill/Index.vue'),
+        children: [
+          { name: 'teacher.days', path: 'days', component: () => import('pages/Panel/Teacher/Days.vue') },
+          { name: 'teacher.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Teacher/Schedule.vue') },
+          { name: 'teacher.student', path: 'student/:day/:schedule', component: () => import('pages/Panel/Teacher/Student.vue') },
+          { name: 'teacher.detail', path: 'detail/:day/:schedule/:student', component: () => import('pages/Panel/Teacher/DetailStudent.vue') }
+        ]
       }
     ]
   }

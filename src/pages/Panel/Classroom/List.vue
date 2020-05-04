@@ -3,8 +3,7 @@
         <div class="q-px-md q-pt-md q-gutter-sm">
             <q-breadcrumbs>
                 <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-                <q-breadcrumbs-el label="Aulas" icon="eva-map-outline" to="/start/pick-quasar-flavour" />
-                <q-breadcrumbs-el label="Lista" to="/vue-components/breadcrumbs" />
+                <q-breadcrumbs-el label="Aulas"/>
             </q-breadcrumbs>
         </div>
         <div class="q-pa-md">
