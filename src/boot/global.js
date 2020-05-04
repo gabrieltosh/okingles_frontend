@@ -1,5 +1,5 @@
 export default ({ Vue }) => {
   Vue.prototype.$values = {
-    api: 'http://localhost:8000/'
+    api: 'https://api.okaprendeingles.com.bo/'
   }
 }

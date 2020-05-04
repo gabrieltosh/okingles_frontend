@@ -35,7 +35,7 @@
                             <div class="row q-pa-md q-col-gutter-md">
                                 <div v-for="schedule in data.times" :key="schedule.id" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                                     <q-card class="my-card">
-                                        <q-img src="http://localhost:8000/images/modules/week/img-schedule.jpg">
+                                        <q-img :src="$values.api+'images/modules/week/img-schedule.jpg'">
                                             <div class="absolute-bottom">
                                                 <div class="text-subtitle2" align="center">{{schedule.time.name}}</div>
                                                 <div v-if="schedule.lesson" class="text-subtitle2" align="center">{{schedule.lesson.name}}</div>
