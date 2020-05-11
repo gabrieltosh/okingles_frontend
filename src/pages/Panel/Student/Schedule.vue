@@ -7,32 +7,68 @@
             <q-breadcrumbs-el label="Horarios" />
         </q-breadcrumbs>
     </div>
-    <div class="q-pa-md">
-        <q-card>
-            <q-card-section>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="text-subtitle1">Horarios {{$route.params.day.name +' '+$route.params.day.day_date}}</div>
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <div v-if="show.loading">
+        <div class="q-pa-md">
+            <q-card>
+                <q-card-section>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-subtitle1">Horarios {{$route.params.day.name +' '+$route.params.day.day_date}}</div>
+                        </div>
+                    </div>
+                </q-card-section>
+                <div class="row q-pa-md q-col-gutter-md">
+                    <div v-for="item in data.schedules" :key="item.id" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                        <q-card class="my-card">
+                            <q-img :src="$values.api+'images/modules/student/img-schedule.jpg'">
+                                <div class="absolute-bottom">
+                                    <div class="text-subtitle2" align="center"> {{item.day.name}} <strong>{{item.time.name}}</strong></div>
+                                    <div class="text-subtitle2" align="center"> <strong>{{item.classroom.name}}</strong></div>
+                                </div>
+                            </q-img>
+                            <q-card-actions align="center">
+                                <q-btn @click="handleShowSchedule(item)" dense round color="primary" size="sm" icon="eva-plus-outline"></q-btn>
+                            </q-card-actions>
+                        </q-card>
                     </div>
                 </div>
+            </q-card>
+        </div>
+      </div>
+      <div v-else>
+        <div class="q-pa-md">
+          <q-card >
+            <q-card-section>
+              <div class="row">
+                <div class="col-6">
+                    <div class="text-subtitle1">Sucursales</div>
+                </div>
+                <div class="col-6">
+                </div>
+              </div>
             </q-card-section>
             <div class="row q-pa-md q-col-gutter-md">
-                <div v-for="item in data.schedules" :key="item.id" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                    <q-card class="my-card">
-                        <q-img :src="$values.api+'images/modules/student/img-schedule.jpg'">
-                            <div class="absolute-bottom">
-                                <div class="text-subtitle2" align="center"> {{item.day.name}} <strong>{{item.time.name}}</strong></div>
-                                <div class="text-subtitle2" align="center"> <strong>{{item.classroom.name}}</strong></div>
-                            </div>
-                        </q-img>
-                        <q-card-actions align="center">
-                            <q-btn @click="handleShowSchedule(item)" dense round color="primary" size="sm" icon="eva-plus-outline"></q-btn>
-                        </q-card-actions>
-                    </q-card>
-                </div>
+              <div v-for="item in 4" :key="item"  class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                <q-card>
+                  <q-skeleton height="120px"   animation="pulse" />
+                  <q-card-actions align="center" class="q-gutter-md">
+                    <q-skeleton type="QBtn"  animation="pulse" />
+                  </q-card-actions>
+                </q-card>
+              </div>
             </div>
-        </q-card>
-    </div>
+          </q-card>
+      </div>
+      </div>
+    </transition>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
+    </q-page-sticky>
     <q-dialog v-model="show.schedule" transition-show="scale" transition-hide="scale">
         <q-card style="width: 400px">
             <q-card-section class="theme-color text-white" align="center">
@@ -172,23 +208,35 @@ export default {
         lesson_id: null
       },
       show: {
-        schedule: false
+        schedule: false,
+        loading: false
       },
-      errors: 0
+      errors: 0,
+      number_process: 0
+    }
+  },
+  watch: {
+    number_process: function (newQuestion, oldQuestion) {
+      if (this.number_process === 2) {
+        this.show.loading = true
+      } else {
+        this.show.loading = false
+      }
     }
   },
   mounted () {
-    this.handleGetDays()
+    this.handleGetSechedule()
     this.handleGetLessons()
   },
   methods: {
-    handleGetDays () {
+    handleGetSechedule () {
       var url = '/student/get/schedule'
       this.$axios.post(url, {
         day_id: this.$route.params.day.id,
         student_id: this.$auth.user().user.id
       }).then(response => {
         this.data.schedules = response.data
+        this.number_process++
       })
     },
     handleShowSchedule (item) {
@@ -201,6 +249,7 @@ export default {
         response.data.forEach((element, index) => {
           this.data.lessons.push({ value: element.id, label: element.name })
         })
+        this.number_process++
       })
     },
     handleFilter (val, update) {
@@ -230,41 +279,69 @@ export default {
       }
     },
     handleStore () {
-      var url = '/student/get/assignment'
-      this.$axios.post(url, {
-        'schedule_id': this.data.schedule.id,
-        'student_id': this.$auth.user().user.id,
-        'lesson_id': this.data.lesson_id
-      }).then(response => {
-        this.show.schedule = false
-        this.data.lesson_id = null
-        if (response.data === 1) {
-          this.$q.notify({
-            message: 'No hay cupos disponibles para la lección',
-            color: 'red'
-          })
-        } else {
-          if (response.data === 2) {
+      this.$q.dialog({
+        title: 'Reservar de Clases',
+        message: '¿ Esta seguro de realizar la reserva ?',
+        ok: {
+          color: 'primary',
+          label: 'Aceptar',
+          rounded: true,
+          size: 'sm'
+        },
+        cancel: {
+          label: 'Cancelar',
+          size: 'sm',
+          flat: true
+        },
+        persistent: true
+      }).onOk(() => {
+        this.number_process = 0
+        var url = '/student/get/assignment'
+        this.$axios.post(url, {
+          'schedule_id': this.data.schedule.id,
+          'student_id': this.$auth.user().user.id,
+          'lesson_id': this.data.lesson_id
+        }).then(response => {
+          this.show.schedule = false
+          this.data.lesson_id = null
+          if (response.data === 1) {
             this.$q.notify({
-              message: 'El horario ya tiene una lección',
+              message: 'No hay cupos disponibles para la lección',
               color: 'red'
             })
           } else {
-            if (response.data === 3) {
+            if (response.data === 2) {
               this.$q.notify({
-                message: 'No hay cupos disponibles para la lección y el horario ya tiene una lección',
+                message: 'El horario ya tiene una lección',
                 color: 'red'
               })
             } else {
-              this.$q.notify({
-                message: 'Tu reserva fue realizada',
-                color: 'positive'
-              })
+              if (response.data === 3) {
+                this.$q.notify({
+                  message: 'No hay cupos disponibles para la lección y el horario ya tiene una lección',
+                  color: 'red'
+                })
+              } else {
+                this.$q.notify({
+                  message: 'Tu reserva fue realizada',
+                  color: 'positive'
+                })
+              }
             }
           }
-        }
-        this.handleGetDays()
+          this.handleGetSechedule()
+          this.handleGetLessons()
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
       })
+    },
+    handleReload () {
+      this.number_process = 0
+      this.handleGetSechedule()
+      this.handleGetLessons()
     }
   }
 }

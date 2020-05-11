@@ -6,28 +6,57 @@
                 <q-breadcrumbs-el label="Grupos de Lecciones" icon="eva-map-outline"/>
             </q-breadcrumbs>
         </div>
-        <div class="q-pa-md">
-            <q-table :filter="search" title="Sucursales" :data="data" :columns="table.lesson" row-key="name">
-                <template v-slot:top>
-                    <div class="text-subtitle1">Grupos de Lecciones</div>
-                    <q-space />
-                    <q-btn :to="{name:'lesson.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear Grupo" />
-                    <q-space />
-                    <q-input  borderless dense v-model="search" placeholder="Buscar"  >
-                        <template v-slot:append>
-                            <q-icon name="eva-search-outline" />
-                        </template>
-                    </q-input>
-                </template>
-                <template v-slot:body-cell-actions="props">
-                    <q-td :props="props">
-                        <q-btn dense round flat color="green" @click="handleShowDetail(props)" icon="eva-plus-circle-outline"></q-btn>
-                        <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
-                        <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
-                    </q-td>
-                </template>
-            </q-table>
-        </div>
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div v-if="show.lesson">
+            <div class="q-pa-md">
+                <q-table :filter="search" title="Sucursales" :data="data" :columns="table.lesson" row-key="name">
+                    <template v-slot:top>
+                        <div class="text-subtitle1">Grupos de Lecciones</div>
+                        <q-space />
+                        <q-btn :to="{name:'lesson.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear Grupo" />
+                        <q-space />
+                        <q-input  borderless dense v-model="search" placeholder="Buscar"  >
+                            <template v-slot:append>
+                                <q-icon name="eva-search-outline" />
+                            </template>
+                        </q-input>
+                    </template>
+                    <template v-slot:body-cell-actions="props">
+                        <q-td :props="props">
+                            <q-btn dense round flat color="green" @click="handleShowDetail(props)" icon="eva-plus-circle-outline"></q-btn>
+                            <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
+                            <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
+                        </q-td>
+                    </template>
+                </q-table>
+            </div>
+          </div>
+          <div v-else>
+            <div class="q-pa-md">
+              <q-card style="max-width: 100%">
+                <div class="row  q-pa-md">
+                  <div class="col-sm-4 col-xs-4" align="center">
+                    <q-skeleton type="rect" animation="pulse" width="70%"/>
+                  </div>
+                  <div class="col-sm-4 col-xs-4" align="center">
+                    <q-skeleton type="rect" animation="pulse" width="70%"/>
+                  </div>
+                  <div class="col-sm-4 col-xs-4" align="center">
+                    <q-skeleton type="rect" animation="pulse" width="70%"/>
+                  </div>
+                  </div>
+                <q-skeleton height="300px" animation="pulse" square />
+              </q-card>
+           </div>
+          </div>
+        </transition>
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
+        </q-page-sticky>
         <q-dialog v-model="show.detail">
           <q-card style="width: 500px" class="q-px-sm q-pb-md">
             <q-table :filter="search" title="Sucursales" :data="lesson.detail" :columns="table.detail" row-key="name">
@@ -85,7 +114,8 @@ export default {
     return {
       show: {
         detail: false,
-        create: false
+        create: false,
+        lesson: false
       },
       table: {
         lesson:
@@ -165,7 +195,17 @@ export default {
         lesson_id: null
       },
       search: null,
-      errors: {}
+      errors: {},
+      number_process: 0
+    }
+  },
+  watch: {
+    number_process: function (newQuestion, oldQuestion) {
+      if (this.number_process === 1) {
+        this.show.lesson = true
+      } else {
+        this.show.lesson = false
+      }
     }
   },
   mounted () {
@@ -179,6 +219,7 @@ export default {
         this.data.forEach((row, index) => {
           row.index = index + 1
         })
+        this.number_process++
       })
     },
     handleEdit (props) {
@@ -285,6 +326,10 @@ export default {
       }).onDismiss(() => {
         // console.log('I am triggered on both OK and Cancel')
       })
+    },
+    handleReload () {
+      this.number_process = 0
+      this.handleGetData()
     }
   }
 }

@@ -3,7 +3,7 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Sucursal" :to="{name:'branch.list'}" />
+            <q-breadcrumbs-el label="Sucursales" :to="{name:'branch.list'}" />
             <q-breadcrumbs-el label="Editar"  />
         </q-breadcrumbs>
     </div>

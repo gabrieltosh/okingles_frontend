@@ -9,6 +9,7 @@
             <q-breadcrumbs-el label="Horarios" />
         </q-breadcrumbs>
     </div>
+
     <div class="q-pa-md">
         <q-card>
             <q-card-section>
@@ -33,24 +34,24 @@
                     <q-tab-panels v-model="tab" animated>
                         <q-tab-panel v-for="item in data.classrooms" :key="item.id" :name="item.id">
                             <div class="row q-pa-md q-col-gutter-md">
-                                <div v-for="schedule in data.times" :key="schedule.id" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                                    <q-card class="my-card">
-                                        <q-img :src="$values.api+'images/modules/week/img-schedule.jpg'">
-                                            <div class="absolute-bottom">
-                                                <div class="text-subtitle2" align="center">{{schedule.time.name}}</div>
-                                                <div v-if="schedule.lesson" class="text-subtitle2" align="center">{{schedule.lesson.name}}</div>
-                                                <div v-if="schedule.teacher" class="text-subtitle2" align="center">{{schedule.teacher.name+' '+schedule.teacher.lastname}}</div>
-                                            </div>
-                                        </q-img>
-                                        <q-card-actions align="center">
-                                            <template v-if="schedule.valid">
-                                              <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
-                                            </template>
-                                            <q-btn v-if="schedule.assigned==0" dense @click="handleDeleteWeek(schedule)" round color="red" size="sm" icon="eva-trash-2-outline"></q-btn>
-                                            <q-btn dense @click="handleGetStudent(schedule)" round color="primary" size="sm" icon="eva-list-outline"></q-btn>
-                                        </q-card-actions>
-                                    </q-card>
-                                </div>
+                              <div v-for="schedule in data.times" :key="schedule.id" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                                <q-card class="my-card">
+                                  <q-img :src="$values.api+'images/modules/week/img-schedule.jpg'">
+                                      <div class="absolute-bottom">
+                                          <div class="text-subtitle2" align="center">{{schedule.time.name}}</div>
+                                          <div v-if="schedule.lesson" class="text-subtitle2" align="center">{{schedule.lesson.name}}</div>
+                                          <div v-if="schedule.teacher" class="text-subtitle2" align="center">{{schedule.teacher.name+' '+schedule.teacher.lastname}}</div>
+                                      </div>
+                                  </q-img>
+                                  <q-card-actions align="center">
+                                      <template v-if="schedule.valid">
+                                        <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
+                                      </template>
+                                      <q-btn v-if="schedule.assigned==0" dense @click="handleDeleteWeek(schedule)" round color="red" size="sm" icon="eva-trash-2-outline"></q-btn>
+                                      <q-btn dense @click="handleGetStudent(schedule)" round color="primary" size="sm" icon="eva-list-outline"></q-btn>
+                                  </q-card-actions>
+                                </q-card>
+                              </div>
                             </div>
                         </q-tab-panel>
                     </q-tab-panels>
@@ -58,6 +59,9 @@
             </q-splitter>
         </q-card>
     </div>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
+    </q-page-sticky>
     <q-dialog v-model="create">
         <q-card style="width: 220px">
             <q-card-section>
@@ -120,7 +124,7 @@
             </q-card-section>
             <q-card-section class="q-pa-none q-ma-none">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
                         <q-card-section class="q-py-none ">
                             <q-list>
                                 <q-item>
@@ -144,7 +148,7 @@
                             </q-list>
                         </q-card-section>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
                         <q-card-section class="q-py-none ">
                             <q-list>
                                 <q-item>
@@ -295,7 +299,11 @@ export default {
       students: false,
       addStudent: false,
       tab: null,
-      splitterModel: 20
+      splitterModel: 20,
+      number_process: 0,
+      show: {
+        schedule: false
+      }
     }
   },
   mounted () {
@@ -309,6 +317,13 @@ export default {
       this.data.times = []
       this.handlePostTimes(newValue)
       this.handleGetTime(newValue)
+    },
+    number_process: function (newQuestion, oldQuestion) {
+      if (this.number_process === 3) {
+        this.show.schedule = true
+      } else {
+        this.show.schedule = false
+      }
     }
   },
   methods: {
@@ -340,6 +355,7 @@ export default {
             label: element.name + ' ' + element.lastname
           })
         })
+        this.number_process++
       })
     },
     handleGetClassroom () {
@@ -347,6 +363,7 @@ export default {
       this.$axios.get(url).then(response => {
         this.data.classrooms = response.data
         this.tab = this.data.classrooms[0].id
+        this.number_process++
       })
     },
     handlePostTimes (id) {
@@ -443,6 +460,7 @@ export default {
             value: element.id,
             label: element.name
           })
+          this.number_process++
         })
       })
     },
@@ -574,6 +592,12 @@ export default {
         this.handleGetSchedule(this.data.schedule.id)
         this.data.student_id = null
       })
+    },
+    handleReload () {
+      this.number_process = 0
+      this.handleGetClassroom()
+      this.handleGetTeachers()
+      this.handleGetLessons()
     }
   }
 }

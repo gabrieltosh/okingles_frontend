@@ -138,19 +138,17 @@
           </q-card-section>
           <q-separator />
             <q-card-section>
-              <div class="row items-center justify-between no-wrap">
-            <div class="row items-center">
-                <q-skeleton type="rect" animation="pulse" width="150px"/>
-            </div>
-
-            <div class="row items-center">
-               <q-skeleton type="rect" animation="pulse" width="150px"/>
-            </div>
-
-            <div class="row items-center">
-                <q-skeleton type="rect" animation="pulse" width="150px"/>
-            </div>
-          </div>
+              <div class="row">
+                <div class="col-sm-4 col-xs-4" align="center">
+                    <q-skeleton type="rect" animation="pulse" width="70%"/>
+                </div>
+                <div class="col-sm-4 col-xs-4" align="center">
+                  <q-skeleton type="rect" animation="pulse" width="70%"/>
+                </div>
+                <div class="col-sm-4 col-xs-4" align="center">
+                    <q-skeleton type="rect" animation="pulse" width="70%"/>
+                </div>
+              </div>
             </q-card-section>
           <q-skeleton height="300px" animation="pulse" square />
         </q-card>
