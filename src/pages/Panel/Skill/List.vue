@@ -120,6 +120,7 @@ export default {
   },
   methods: {
     handleGetData () {
+      this.number_process = 0
       var url = '/panel/skill/get/skill'
       this.$axios.get(url).then(response => {
         this.data = response.data

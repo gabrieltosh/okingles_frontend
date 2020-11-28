@@ -100,6 +100,7 @@ export default {
   },
   methods: {
     handleGetDays () {
+      this.number_process = 0
       var url = '/panel/day/get/days/' + this.$route.params.week_id
       this.$axios.get(url).then(response => {
         this.data.days = response.data.days

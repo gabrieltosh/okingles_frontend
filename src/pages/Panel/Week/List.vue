@@ -113,6 +113,7 @@ export default {
       })
     },
     handleGetWeeks () {
+      this.number_process = 0
       var url = '/panel/week/get/week/' + this.$route.params.data.id
       this.$axios.get(url).then(response => {
         this.data.weeks = response.data

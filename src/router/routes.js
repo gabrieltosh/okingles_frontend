@@ -18,7 +18,8 @@ const routes = [
         children: [
           { name: 'user.list', path: 'list', component: () => import('pages/Panel/User/List.vue') },
           { name: 'user.create', path: 'create', component: () => import('pages/Panel/User/Create.vue') },
-          { name: 'user.edit', path: 'edit', component: () => import('pages/Panel/User/Edit.vue') }
+          { name: 'user.edit', path: 'edit', component: () => import('pages/Panel/User/Edit.vue') },
+          { name: 'user.detail', path: 'details/:student', component: () => import('pages/Panel/User/Card.vue') }
         ]
       },
       {
@@ -103,8 +104,25 @@ const routes = [
         path: 'student',
         component: () => import('pages/Panel/Student/Index.vue'),
         children: [
-          { name: 'student.days', path: 'days', component: () => import('pages/Panel/Student/Days.vue') },
-          { name: 'student.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Student/Schedule.vue') }
+          {
+            name: 'student.reservation',
+            path: 'reservation',
+            component: () => import('pages/Panel/Student/Reservation/Index.vue'),
+            children: [
+              { name: 'reservation.days', path: 'days', component: () => import('pages/Panel/Student/Reservation/Days.vue') },
+              { name: 'reservation.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Student/Reservation/Schedule.vue') }
+            ]
+          },
+          {
+            name: 'student.myclass',
+            path: 'myclass',
+            component: () => import('pages/Panel/Student/MyClass/Index.vue'),
+            children: [
+              { name: 'myclass.schedules', path: 'schedules', component: () => import('pages/Panel/Student/MyClass/Schedules.vue') },
+              { name: 'myclass.schedule', path: 'schedule/:schedule', component: () => import('pages/Panel/Student/MyClass/Student.vue') },
+              { name: 'myclass.preview', path: 'preview/:schedule/::questionnaire', component: () => import('pages/Panel/Student/MyClass/Preview.vue') }
+            ]
+          }
         ]
       },
       {
@@ -118,12 +136,45 @@ const routes = [
       },
       {
         path: 'teacher',
-        component: () => import('pages/Panel/Skill/Index.vue'),
+        component: () => import('pages/Panel/Teacher/Index.vue'),
         children: [
-          { name: 'teacher.days', path: 'days', component: () => import('pages/Panel/Teacher/Days.vue') },
-          { name: 'teacher.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Teacher/Schedule.vue') },
-          { name: 'teacher.student', path: 'student/:day/:schedule', component: () => import('pages/Panel/Teacher/Student.vue') },
-          { name: 'teacher.detail', path: 'detail/:day/:schedule/:student', component: () => import('pages/Panel/Teacher/DetailStudent.vue') }
+          {
+            name: 'teacher.myschedules',
+            path: 'myschedules',
+            component: () => import('pages/Panel/Teacher/MySchedules/Index.vue'),
+            children: [
+              { name: 'myschedules.days', path: 'days', component: () => import('pages/Panel/Teacher/MySchedules/Days.vue') },
+              { name: 'myschedules.schedule', path: 'schedule/:day', component: () => import('pages/Panel/Teacher/MySchedules/Schedule.vue') },
+              { name: 'myschedules.student', path: 'student/:day/:schedule', component: () => import('pages/Panel/Teacher/MySchedules/Student.vue') },
+              { name: 'myschedules.preview', path: 'student/:day/:schedule/:questionnaire', component: () => import('pages/Panel/Teacher/MySchedules/Preview.vue') },
+              { name: 'myschedules.detail', path: 'detail/:day/:schedule/:student', component: () => import('pages/Panel/Teacher/MySchedules/DetailStudent.vue') }
+            ]
+          },
+          {
+            name: 'teacher.materials',
+            path: 'materials',
+            component: () => import('pages/Panel/Teacher/Materials/Index.vue'),
+            children: [
+              { name: 'myschedules.list', path: 'list', component: () => import('pages/Panel/Teacher/Materials/List.vue') }
+            ]
+          },
+          {
+            name: 'teacher.questionnaires',
+            path: 'questionnaires',
+            component: () => import('pages/Panel/Teacher/Questionary/Index.vue'),
+            children: [
+              { name: 'questionnaires.list', path: 'list', component: () => import('pages/Panel/Teacher/Questionary/List.vue') },
+              { name: 'questionnaires.details', path: 'details/:questionnaire', component: () => import('pages/Panel/Teacher/Questionary/Details.vue') },
+              { name: 'questionnaires.preview', path: 'preview/:questionnaire', component: () => import('pages/Panel/Teacher/Questionary/Preview.vue') }
+            ]
+          }
+        ]
+      },
+      {
+        path: 'webpage',
+        component: () => import('pages/Panel/WebPage/Index.vue'),
+        children: [
+          { name: 'webpage.list', path: 'list', component: () => import('pages/Panel/WebPage/List.vue') }
         ]
       }
     ]

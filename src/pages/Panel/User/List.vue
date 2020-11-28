@@ -44,12 +44,13 @@
                   </template>
                   <template v-slot:body-cell-status="props">
                       <q-td :props="props">
-                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
-                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                          <q-btn size="sm" v-if="props.row.status" dense  color="green" @click="handleChangeStatus(props)" >Activo</q-btn>
+                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
                       </q-td>
                   </template>
                   <template v-slot:body-cell-actions="props">
                       <q-td :props="props">
+                          <q-btn dense round flat color="warning" @click="handleDetails(props)" icon="eva-file-text-outline"></q-btn>
                           <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
                           <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
                           <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
@@ -77,8 +78,8 @@
                   </template>
                   <template v-slot:body-cell-status="props">
                       <q-td :props="props">
-                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
-                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                          <q-btn size="sm" v-if="props.row.status" dense color="green" @click="handleChangeStatus(props)" >Activo</q-btn>
+                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
                       </q-td>
                   </template>
                   <template v-slot:body-cell-actions="props">
@@ -110,8 +111,8 @@
                   </template>
                   <template v-slot:body-cell-status="props">
                       <q-td :props="props">
-                          <q-btn v-if="!props.row.status" dense round flat color="green" @click="handleChangeStatus(props)" icon="eva-checkmark-circle-2-outline"></q-btn>
-                          <q-btn v-else dense round flat color="red" @click="handleChangeStatus(props)" icon="eva-close-circle-outline"></q-btn>
+                          <q-btn size="sm" v-if="props.row.status" dense color="green" @click="handleChangeStatus(props)">Activo</q-btn>
+                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
                       </q-td>
                   </template>
                   <template v-slot:body-cell-actions="props">
@@ -443,6 +444,7 @@ export default {
       })
     },
     handleGetData () {
+      this.number_process = 0
       var url = '/panel/user/get/users/'
       this.$axios.get(url + 'admins').then(response => {
         this.data.admins = response.data
@@ -510,6 +512,14 @@ export default {
     handleReload () {
       this.number_process = 0
       this.handleGetData()
+    },
+    handleDetails (props) {
+      this.$router.push({
+        name: 'user.detail',
+        params: {
+          student: props.row
+        }
+      })
     }
   }
 }

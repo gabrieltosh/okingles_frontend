@@ -9,7 +9,6 @@
             <q-breadcrumbs-el label="Horarios" />
         </q-breadcrumbs>
     </div>
-
     <div class="q-pa-md">
         <q-card>
             <q-card-section>
@@ -104,7 +103,7 @@
             </q-card-section>
             <q-card-actions align="center" class="bg-white text-teal">
                 <q-btn flat label="Cancelar" v-close-popup />
-                <q-btn flat label="Crear" @click="handleUpdateSchedule()" />
+                <q-btn flat label="Guardar" @click="handleUpdateSchedule()" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -394,6 +393,7 @@ export default {
       })
     },
     handleGetTime (id) {
+      this.data.times_create = []
       this.data.store.classroom_id = this.tab
       this.data.store.day_id = this.$route.params.day.id
       var url = '/panel/schedule/get/times'

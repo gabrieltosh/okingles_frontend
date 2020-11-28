@@ -31,9 +31,9 @@
                                 <div class="text-subtitle2" align="center">{{item.name}}</div>
                                 </div>
                             </q-img>
-                            <q-card-actions align="center">
-                                <q-btn dense @click="handleShowDays(item)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
-                            </q-card-actions>
+                              <q-card-actions align="center">
+                                  <q-btn dense @click="handleShowDays(item)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
+                              </q-card-actions>
                             </q-card>
                         </div>
                     </div>

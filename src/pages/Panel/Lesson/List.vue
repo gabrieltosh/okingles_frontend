@@ -213,6 +213,7 @@ export default {
   },
   methods: {
     handleGetData () {
+      this.number_process = 0
       var url = '/panel/lesson/get/lesson'
       this.$axios.get(url).then(response => {
         this.data = response.data

@@ -145,6 +145,7 @@ export default {
       }
     },
     handleGetData () {
+      this.number_process = 0
       var url = '/panel/module/index'
       this.$axios.get(url).then(response => {
         this.data = response.data
