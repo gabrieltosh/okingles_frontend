@@ -32,8 +32,16 @@
                                 </div>
                             </q-img>
                             <q-card-actions align="center">
-                                <q-btn @click="handleScheduleWeek(item)" dense round color="primary" size="sm" icon="eva-plus-outline"></q-btn>
-                                <q-btn v-if="item.deactivate" @click="handleChangeStatus(item)" dense round :color="!item.status?'secondary':'red'" size="sm" :icon="!item.status?'eva-checkmark-outline':'eva-close-outline'"></q-btn>
+                                <q-btn @click="handleScheduleWeek(item)" dense round color="primary" size="sm" icon="eva-plus-outline">
+                                  <q-tooltip content-style="font-size: 11px" content-class="bg-primary" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                                    Detalles
+                                  </q-tooltip>
+                                </q-btn>
+                                <q-btn v-if="item.deactivate" @click="handleChangeStatus(item)" dense round :color="!item.status?'secondary':'red'" size="sm" :icon="!item.status?'eva-checkmark-outline':'eva-close-outline'">
+                                  <q-tooltip content-style="font-size: 11px" :content-class="!item.status?'bg-secondary':'bg-red'" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                                    {{!item.status?'Activar Horarios':'Desactivar Horarios'}}
+                                  </q-tooltip>
+                                </q-btn>
                             </q-card-actions>
                             </q-card>
                         </div>
@@ -47,7 +55,7 @@
                 <q-card-section>
                   <div class="row">
                     <div class="col-6">
-                        <div class="text-subtitle1">Sucursales</div>
+                        <div class="text-subtitle1">Cargando</div>
                     </div>
                     <div class="col-6">
                     </div>

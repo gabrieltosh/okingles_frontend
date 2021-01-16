@@ -87,7 +87,7 @@
                   <q-btn type="a" :href="item.link" target="_blank" dense round flat color="primary" icon="las la-external-link-alt"></q-btn>
                 </q-item-section>
               </q-item>
-               <q-item  v-ripple  v-for="item in data.schedule.material.files" :key="item.id">
+              <q-item  v-ripple  v-for="item in data.schedule.material.files" :key="item.id">
                   <q-item-section avatar top>
                     <q-avatar rounded >
                         <img :src="require('../../../../statics/images/modules/teacher/materials/'+handleIconFile(item.type))">
@@ -142,6 +142,91 @@
                 </q-item-section>
               </q-item>
             </q-list>
+          </q-card>
+        </div>
+      </div>
+
+      <div class="row q-col-gutter-md q-pt-md">
+        <div class="col-sm-6 col-md-6 col-xs-12">
+          <q-card class="my-card q-pa-md">
+            <q-form
+              @submit="handleValidTask"
+              @reset="onReset"
+              ref="Form"
+              class="q-gutter-md"
+            >
+            <q-list >
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-sm text-bold text-center text-subtitle1">Enviar Tarea</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-sm text-bold">Descripcion : </q-item-label>
+                  <q-input rounded dense v-model="data.task.description" label="Descripcion" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                    <template v-slot:prepend>
+                        <q-icon name="eva-edit-2-outline" />
+                    </template>
+                  </q-input>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>
+                  <q-item-label class="q-pb-sm text-bold">Subir Archivo : </q-item-label>
+                  <q-file rounded dense v-model="file" label="Elige un archivo">
+                    <template v-slot:prepend>
+                      <q-icon name="eva-attach-2-outline" />
+                    </template>
+                  </q-file>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <div class="text-center">
+              <q-btn-group spread>
+                <q-btn color="white" text-color="black" label="Cancelar" v-close-popup/>
+                <q-btn label="Enviar" rounded type="submit" color="primary"/>
+              </q-btn-group>
+            </div>
+            </q-form>
+            <q-inner-loading :showing="loading.task">
+              <q-spinner-puff
+                color="primary"
+                size="6em"
+              />
+            </q-inner-loading>
+          </q-card>
+        </div>
+        <div class="col-sm-6 col-md-6 col-xs-12">
+          <q-card class="my-card q-pa-md">
+            <div class="row">
+              <div class="col-sm-12 col-xs-12 col-md-12 text-center">
+                Lista de Tareas
+              </div>
+            </div>
+            <q-item  v-ripple  v-for="(item,index) in data.tasks" :key="index">
+              <q-item-section avatar top>
+                <q-avatar rounded >
+                    <img :src="require('../../../../statics/images/modules/teacher/materials/'+handleIconFile(GetFileExtension(item.file_name)))">
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label lines="1">{{(1+index)+'.- '+ item.description}}</q-item-label>
+                <q-item-label caption>{{item.created_at}}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-badge outline align="middle" color="teal">
+                  {{GetFileExtension(item.file_name)}}
+                </q-badge>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn @click="handleShowTask(item)" dense round flat color="primary" icon="eva-search-outline">
+                    <q-tooltip content-class="bg-blue" :offset="[10, 10]">
+                    Ver archivo
+                  </q-tooltip>
+                </q-btn>
+              </q-item-section>
+            </q-item>
           </q-card>
         </div>
       </div>
@@ -287,6 +372,8 @@ export default {
           align: 'center'
         }
       ],
+      visible: null,
+      file: null,
       data: {
         skills: [],
         store: {
@@ -311,7 +398,15 @@ export default {
         assignament_material: {
           material_id: null,
           schedule_id: null
-        }
+        },
+        task: {
+          description: null,
+          file: null,
+          file_name: null,
+          user_id: null,
+          schedule_id: null
+        },
+        tasks: []
       },
       src: null,
       show: {
@@ -325,14 +420,31 @@ export default {
         pdf: false,
         audio: false,
         video: false,
-        questionnaire: false
+        questionnaire: false,
+        task: false
+      },
+      loading: {
+        task: false
       }
     }
   },
   mounted () {
     this.data.schedule = this.$route.params.schedule
+    this.handleGetTasks()
   },
   methods: {
+    GetFileExtension (filename) {
+      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+    },
+    handleGetTasks () {
+      var url = '/student/post/myclass/task'
+      this.$axios.post(url, {
+        student_id: this.$auth.user().user.id,
+        schedule_id: this.data.schedule.id
+      }).then(response => {
+        this.data.tasks = response.data
+      })
+    },
     inited (viewer) {
       this.$viewer = viewer
     },
@@ -340,6 +452,50 @@ export default {
       this.src = null
       this.src = this.$values.api + 'app/materials/' + item.location
       switch (item.type) {
+        case 'mp4':
+          this.dialog.video = true
+          break
+        case 'mp3':
+          this.dialog.audio = true
+          break
+        case 'pdf':
+          this.dialog.pdf = true
+          break
+        case 'pptx':
+        case 'pptm':
+        case 'ppt':
+        case 'xlsx':
+        case 'xlsm':
+        case 'xlsb':
+        case 'xltx':
+        case 'docx':
+        case 'docm':
+        case 'dotx':
+        case 'dtm':
+          this.dialog.doc = true
+          break
+        case 'jpeg':
+        case 'jpg':
+        case 'gif':
+        case 'raw':
+        case 'bmp':
+        case 'png':
+          this.$viewer.show()
+          this.dialog.show = false
+          break
+        default:
+          this.$q.notify({
+            color: 'warning',
+            icon: 'announcement',
+            message: 'No se puede abrir el archivo'
+          })
+          break
+      }
+    },
+    handleShowTask (item) {
+      this.src = null
+      this.src = this.$values.api + 'app/tasks/' + item.file_name
+      switch (this.GetFileExtension(item.file_name)) {
         case 'mp4':
           this.dialog.video = true
           break
@@ -446,6 +602,45 @@ export default {
           questionnaire: questionnaire
         }
       })
+    },
+    handleStoreTask () {
+      this.loading.task = true
+      const fd = new FormData()
+      fd.append('file', this.file)
+      this.$axios.post(
+        '/student/store/myclass/upload',
+        fd,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      ).then(response => {
+        this.data.task.file_name = response.data.file_name
+        this.data.task.user_id = this.$auth.user().user.id
+        this.data.task.schedule_id = this.data.schedule.id
+        var url = '/student/store/myclass/task'
+        this.$axios.post(url, this.data.task).then(response => {
+          this.$q.notify({
+            color: 'positive',
+            message: '¡ Archivo subido correctamente !',
+            icon: 'eva-checkmark-circle-2-outline',
+            progress: true
+          })
+          this.loading.task = false
+          this.handleReset()
+          this.$refs.Form.resetValidation()
+        })
+      })
+    },
+    handleReset () {
+      this.data.task.file_name = null
+      this.data.task.user_id = null
+      this.data.task.schedule_id = null
+      this.data.task.description = null
+      this.file = null
+    },
+    handleValidTask () {
+      this.handleStoreTask()
+    },
+    onReset () {
+
     }
   }
 }

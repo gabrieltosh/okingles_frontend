@@ -16,10 +16,34 @@ const routes = [
         path: 'user',
         component: () => import('pages/Panel/User/Index.vue'),
         children: [
-          { name: 'user.list', path: 'list', component: () => import('pages/Panel/User/List.vue') },
-          { name: 'user.create', path: 'create', component: () => import('pages/Panel/User/Create.vue') },
-          { name: 'user.edit', path: 'edit', component: () => import('pages/Panel/User/Edit.vue') },
-          { name: 'user.detail', path: 'details/:student', component: () => import('pages/Panel/User/Card.vue') }
+          {
+            path: 'student',
+            component: () => import('pages/Panel/User/Student/Index.vue'),
+            children: [
+              { name: 'user.student.list', path: 'list', component: () => import('pages/Panel/User/Student/List.vue') },
+              { name: 'user.student.create', path: 'create', component: () => import('pages/Panel/User/Student/Create.vue') },
+              { name: 'user.student.edit', path: 'edit', component: () => import('pages/Panel/User/Student/Edit.vue') },
+              { name: 'user.student.detail', path: 'details/:student', component: () => import('pages/Panel/User/Student/Card.vue') }
+            ]
+          },
+          {
+            path: 'teacher',
+            component: () => import('pages/Panel/User/Teacher/Index.vue'),
+            children: [
+              { name: 'user.teacher.list', path: 'list', component: () => import('pages/Panel/User/Teacher/List.vue') },
+              { name: 'user.teacher.create', path: 'create', component: () => import('pages/Panel/User/Teacher/Create.vue') },
+              { name: 'user.teacher.edit', path: 'edit', component: () => import('pages/Panel/User/Teacher/Edit.vue') }
+            ]
+          },
+          {
+            path: 'admin',
+            component: () => import('pages/Panel/User/Admin/Index.vue'),
+            children: [
+              { name: 'user.admin.list', path: 'list', component: () => import('pages/Panel/User/Admin/List.vue') },
+              { name: 'user.admin.create', path: 'create', component: () => import('pages/Panel/User/Admin/Create.vue') },
+              { name: 'user.admin.edit', path: 'edit', component: () => import('pages/Panel/User/Admin/Edit.vue') }
+            ]
+          }
         ]
       },
       {

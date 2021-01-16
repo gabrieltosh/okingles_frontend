@@ -12,9 +12,9 @@
           <q-input
             rounded
             dense
-            v-model="auth.email"
-            label="Correo Electronico"
-            type="email"
+            v-model="auth.ci"
+            label="Carnet de Identidad"
+            type="text"
             :rules="[val => !!val || 'El campo es requerido']"
           />
           <q-input
@@ -61,7 +61,8 @@ export default {
       auth: {
         remember: false,
         password: null,
-        email: null
+        email: null,
+        ci: null
       },
       show: {
         password: {
@@ -120,7 +121,7 @@ export default {
       this.$auth
         .login({
           data: {
-            email: this.auth.email,
+            ci: this.auth.ci,
             password: this.auth.password,
             remember: this.auth.remenber
           },

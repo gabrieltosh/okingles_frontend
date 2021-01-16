@@ -44,10 +44,22 @@
                                   </q-img>
                                   <q-card-actions align="center">
                                       <template v-if="schedule.valid">
-                                        <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline"></q-btn>
+                                        <q-btn v-if="!schedule.teacher_id" dense @click="handleEditSchedule(schedule)" round color="secondary" size="sm" icon="eva-plus-outline">
+                                          <q-tooltip content-style="font-size: 11px" content-class="bg-secondary" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                                            Asignar Datos
+                                          </q-tooltip>
+                                        </q-btn>
                                       </template>
-                                      <q-btn v-if="schedule.assigned==0" dense @click="handleDeleteWeek(schedule)" round color="red" size="sm" icon="eva-trash-2-outline"></q-btn>
-                                      <q-btn dense @click="handleGetStudent(schedule)" round color="primary" size="sm" icon="eva-list-outline"></q-btn>
+                                      <q-btn dense @click="handleGetStudent(schedule)" round color="primary" size="sm" icon="eva-list-outline">
+                                        <q-tooltip content-style="font-size: 11px" content-class="bg-primary" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                                          Gestionar Horario
+                                        </q-tooltip>
+                                      </q-btn>
+                                      <q-btn v-if="schedule.assigned==0" dense @click="handleDeleteWeek(schedule)" round color="red" size="sm" icon="eva-trash-2-outline">
+                                        <q-tooltip content-style="font-size: 11px" content-class="bg-red" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                                          Eliminar Horario
+                                        </q-tooltip>
+                                      </q-btn>
                                   </q-card-actions>
                                 </q-card>
                               </div>

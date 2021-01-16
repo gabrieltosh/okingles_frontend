@@ -3,13 +3,13 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" :to="{name:'user.list'}" />
-            <q-breadcrumbs-el label="Crear"/>
+            <q-breadcrumbs-el label="Estudiantes" icon="eva-map-outline" :to="{name:'user.student.list'}" />
+            <q-breadcrumbs-el label="Editar"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
         <q-card class="my-card">
-            <q-form ref="create" @submit="HandlePostUser" @reset="handleFormReset">
+            <q-form @submit="HandleUpdateUser" @reset="handleFormReset">
                 <q-card-section>
                     <div class="text-subtitle1 text-primary">Crear Usuario</div>
                     <q-banner v-if="show.errors" transition-show="flip-up" dense rounded inline-actions class="text-white bg-red q-pa-xs q-ma-sm">
@@ -22,70 +22,81 @@
                     </q-banner>
                     <div class="row">
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                            <q-input rounded dense v-model="data.name" label="Nombre" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']" >
+                            <q-input rounded dense v-model="data.name" label="Nombre" lazy-rules :rules="[ val => !!val || 'El campo es requerido']" >
                                 <template v-slot:prepend>
                                     <q-icon name="eva-credit-card-outline" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                            <q-input rounded dense v-model="data.lastname" label="Apellido" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                            <q-input rounded dense v-model="data.lastname" label="Apellido" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                                 <template v-slot:prepend>
                                     <q-icon name="eva-credit-card-outline" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                            <q-input rounded dense v-model="data.ci" label="Carnet de Identidad"  lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                            <q-input rounded dense v-model="data.ci" label="Carnet de Identidad"  lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                                 <template v-slot:prepend>
                                     <q-icon name="eva-edit-2-outline" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                            <q-input rounded dense v-model="data.email" label="Correo Electronico" type="email"  lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                            <q-input rounded dense v-model="data.email" label="Correo Electronico" type="email"  lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                                 <template v-slot:prepend>
                                     <q-icon name="eva-email-outline" />
                                 </template>
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.occupation" label="Ocupación" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                          <q-input rounded dense v-model="data.occupation" label="Ocupación" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-briefcase-outline" />
                               </template>
                           </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.address" label="Dirección" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                          <q-input rounded dense v-model="data.address" label="Dirección" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-book-open-outline" />
                               </template>
                           </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.phone" type="tel" label="Celular" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                          <q-input rounded dense v-model="data.phone" type="tel" label="Celular" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-phone-outline" />
                               </template>
                           </q-input>
                         </div>
                          <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.invoice" label="Factura" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                          <q-input rounded dense v-model="data.invoice" label="Factura" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-edit-2-outline" />
                               </template>
                           </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.registter" label="Registro" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
+                          <q-input rounded dense v-model="data.registter" label="Registro" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-edit-2-outline" />
                               </template>
                           </q-input>
                         </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
+                           <q-input rounded dense v-model="data.start_date" mask="date" label="Fecha Inicio" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
+                              <template v-slot:prepend>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy ref="qDateProxy1" transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="data.start_date" @input="() => $refs.qDateProxy1.hide()" />
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                        </div>
                          <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                           <q-input rounded dense v-model="data.due_date" mask="date" label="Fecha Finalización" lazy-rules :rules="['date']">
+                           <q-input rounded dense v-model="data.due_date" mask="date" label="Fecha Finalización" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy ref="qDateProxy2" transition-show="scale" transition-hide="scale">
@@ -96,7 +107,7 @@
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                           <q-input rounded dense v-model="data.birthdate" mask="date" label="Fecha Cumpleaños" lazy-rules :rules="['date']">
+                           <q-input rounded dense v-model="data.birthdate" mask="date" label="Fecha Cumpleaños" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
@@ -153,16 +164,13 @@
                         </div>
                     </div>
                     <div align="center">
-                        <q-btn :to="{name:'user.list'}" label="Cancelar" type="reset" color="primary" flat />
-                        <q-btn rounded label="Crear" type="submit" color="primary" />
+                        <q-btn :to="{name:'user.student.list'}" label="Cancelar" type="reset" color="primary" flat />
+                        <q-btn rounded label="Actualizar" type="submit" color="primary" />
                     </div>
                 </q-card-section>
             </q-form>
         </q-card>
     </div>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn @click="handleReload()" fab icon="eva-refresh-outline" color="primary" />
-    </q-page-sticky>
 </div>
 </template>
 
@@ -171,22 +179,24 @@ export default {
   data () {
     return {
       data: {
-        name: null,
-        lastname: null,
-        ci: null,
-        email: null,
-        occupation: null,
-        address: null,
-        password: null,
-        birthdate: null,
-        due_date: null,
-        phone: null,
-        invoice: null,
-        registter: null,
+        id: this.$route.params.data.id,
+        name: this.$route.params.data.name,
+        lastname: this.$route.params.data.lastname,
+        ci: this.$route.params.data.ci,
+        email: this.$route.params.data.email,
+        occupation: this.$route.params.data.occupation,
+        address: this.$route.params.data.address,
+        password: this.$route.params.data.password,
+        birthdate: this.$route.params.data.birthdate,
+        due_date: this.$route.params.data.due_date,
+        start_date: this.$route.params.data.start_date,
+        phone: this.$route.params.data.phone,
+        invoice: this.$route.params.data.invoice,
+        registter: this.$route.params.data.registter,
         image: null,
-        profile_id: null,
-        banch_office_id: null,
-        type: null
+        profile_id: this.$route.params.data.profile_id,
+        branch_office_id: this.$route.params.data.branch_office_id,
+        type: this.$route.params.data.type
       },
       profiles: [],
       branches: [],
@@ -241,13 +251,13 @@ export default {
         })
       })
     },
-    HandlePostUser (evt) {
-      var url = '/panel/user/post/store'
+    HandleUpdateUser (evt) {
+      var url = '/panel/user/post/update/user'
       this.$axios.post(url, this.data).then(response => {
-        this.$router.push({ name: 'user.list' })
+        this.$router.push({ name: 'user.student.list' })
         this.$q.notify({
           color: 'positive',
-          message: '¡ Usuario creado exitosamente !',
+          message: '¡ Usuario Editado exitosamente !',
           icon: 'eva-checkmark-circle-2-outline',
           progress: true
         })
@@ -255,27 +265,8 @@ export default {
     },
     handleFormReset () {
       this.data.name = null
-      this.data.lastname = null
-      this.data.ci = null
-      this.data.email = null
-      this.data.occupation = null
+      this.data.city = null
       this.data.address = null
-      this.data.password = null
-      this.data.birthdate = null
-      this.data.due_date = null
-      this.data.phone = null
-      this.data.invoice = null
-      this.data.registter = null
-      this.data.image = null
-      this.data.profile_id = null
-      this.data.banch_office_id = null
-      this.data.type = null
-    },
-    handleReload () {
-      this.HandleGetProfile()
-      this.HandleGetBranchOffice()
-      this.$refs.create.resetValidation()
-      this.handleFormReset()
     }
   }
 }

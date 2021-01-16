@@ -3,7 +3,7 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuario" icon="eva-map-outline" :to="{name:'user.list'}" />
+            <q-breadcrumbs-el label="Docentes" icon="eva-map-outline" :to="{name:'user.teacher.list'}" />
             <q-breadcrumbs-el label="Crear"/>
         </q-breadcrumbs>
     </div>
@@ -50,13 +50,6 @@
                             </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.occupation" label="Ocupación" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
-                              <template v-slot:prepend>
-                                  <q-icon name="eva-briefcase-outline" />
-                              </template>
-                          </q-input>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                           <q-input rounded dense v-model="data.address" label="Dirección" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
                               <template v-slot:prepend>
                                   <q-icon name="eva-book-open-outline" />
@@ -69,31 +62,6 @@
                                   <q-icon name="eva-phone-outline" />
                               </template>
                           </q-input>
-                        </div>
-                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.invoice" label="Factura" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
-                              <template v-slot:prepend>
-                                  <q-icon name="eva-edit-2-outline" />
-                              </template>
-                          </q-input>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-input rounded dense v-model="data.registter" label="Registro" lazy-rules :rules="[ val => val && val.length > 0 || 'El campo es requerido']">
-                              <template v-slot:prepend>
-                                  <q-icon name="eva-edit-2-outline" />
-                              </template>
-                          </q-input>
-                        </div>
-                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                           <q-input rounded dense v-model="data.due_date" mask="date" label="Fecha Finalización" lazy-rules :rules="['date']">
-                              <template v-slot:prepend>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy ref="qDateProxy2" transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="data.due_date" @input="() => $refs.qDateProxy2.hide()" />
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                            <q-input rounded dense v-model="data.birthdate" mask="date" label="Fecha Cumpleaños" lazy-rules :rules="['date']">
@@ -136,24 +104,9 @@
                                 </template>
                             </q-select>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                          <q-select
-                                dense
-                                v-model="data.type"
-                                :options="types"
-                                label="Tipo de Usuario"
-                                emit-value
-                                map-options
-                                clearable rounded
-                            >
-                             <template v-slot:prepend>
-                                    <q-icon name="eva-people-outline" />
-                                </template>
-                            </q-select>
-                        </div>
                     </div>
                     <div align="center">
-                        <q-btn :to="{name:'user.list'}" label="Cancelar" type="reset" color="primary" flat />
+                        <q-btn :to="{name:'user.teacher.list'}" label="Cancelar" type="reset" color="primary" flat />
                         <q-btn rounded label="Crear" type="submit" color="primary" />
                     </div>
                 </q-card-section>
@@ -186,25 +139,12 @@ export default {
         image: null,
         profile_id: null,
         banch_office_id: null,
-        type: null
+        type: null,
+        start_date: null
       },
       profiles: [],
       branches: [],
       errors: [],
-      types: [
-        {
-          label: 'Administrativo',
-          value: 'Administrativo'
-        },
-        {
-          label: 'Docente',
-          value: 'Docente'
-        },
-        {
-          label: 'Estudiante',
-          value: 'Estudiante'
-        }
-      ],
       show: {
         errors: false
       },
@@ -241,10 +181,11 @@ export default {
         })
       })
     },
-    HandlePostUser (evt) {
+    HandlePostUser () {
+      this.data.type = 'Docente'
       var url = '/panel/user/post/store'
       this.$axios.post(url, this.data).then(response => {
-        this.$router.push({ name: 'user.list' })
+        this.$router.push({ name: 'user.teacher.list' })
         this.$q.notify({
           color: 'positive',
           message: '¡ Usuario creado exitosamente !',
@@ -270,6 +211,7 @@ export default {
       this.data.profile_id = null
       this.data.banch_office_id = null
       this.data.type = null
+      this.data.start_date = null
     },
     handleReload () {
       this.HandleGetProfile()

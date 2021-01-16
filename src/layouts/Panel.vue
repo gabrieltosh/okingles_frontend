@@ -25,9 +25,7 @@
                   </q-btn>
                 </div>
                 <q-btn round flat @click="rigthDrawerOpen = !rigthDrawerOpen">
-                    <q-avatar size="26px">
-                        <img :src="$values.api+'app/uploads/'+$auth.user().user.image">
-                    </q-avatar>
+                  <q-avatar size="30px" color="primary" text-color="white">{{$auth.user().user.name.charAt(0)+$auth.user().user.lastname.charAt(0)}}</q-avatar>
                 </q-btn>
             </div>
         </q-toolbar>
@@ -154,9 +152,7 @@
     <q-drawer side="right" v-model="rigthDrawerOpen" bordered :width="300" :breakpoint="500" content-class="white">
           <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
             <div class="absolute-bottom bg-transparent">
-              <q-avatar size="56px" class="q-mb-sm">
-                <img :src="$values.api+'app/uploads/'+$auth.user().user.image">
-              </q-avatar>
+              <q-avatar size="56px" color="primary" text-color="white">{{$auth.user().user.name.charAt(0)+$auth.user().user.lastname.charAt(0)}}</q-avatar>
               <div class="text-weight-bold">{{ $auth.user().user.name+' '+$auth.user().user.lastname}}</div>
               <div>{{$auth.user().user.email}}</div>
             </div>

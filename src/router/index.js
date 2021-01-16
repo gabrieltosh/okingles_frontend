@@ -32,8 +32,8 @@ export default function (/* { store, ssrContext } */) {
   sync(store(), Router)
   Vue.router = Router
   Vue.use(VueAxios, axios)
-  // Vue.axios.defaults.baseURL = 'http://localhost:8000/api/'
-  Vue.axios.defaults.baseURL = 'https://api.okaprendeingles.com.bo/api'
+  Vue.axios.defaults.baseURL = 'http://localhost:8000/api/'
+  // Vue.axios.defaults.baseURL = 'https://api.okaprendeingles.com.bo/api'
   Vue.use(auth, {
     auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),

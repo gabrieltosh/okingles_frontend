@@ -3,7 +3,7 @@
     <div class="q-px-md q-pt-md q-gutter-sm">
         <q-breadcrumbs>
             <q-breadcrumbs-el label="Inicio" icon="eva-grid-outline" to="/" />
-            <q-breadcrumbs-el label="Usuarios"/>
+            <q-breadcrumbs-el label="Estudiantes"/>
         </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
@@ -12,149 +12,55 @@
         enter-active-class="animated fadeIn"
         leave-active-class="animated fadeOut"
       >
-      <div v-if="show.students">
-        <q-card>
-          <q-tabs
-            v-model="tab"
-            class="text-primary"
-            inline-label
-          >
-            <q-tab name="students" label="Estudiantes" />
-            <q-tab name="teachers" label="Docentes" />
-            <q-tab name="admins" label="Administradores" />
-          </q-tabs>
-          <q-separator />
-          <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="students">
-                <q-table :filter="search.students" :data="data.students" :columns="columns" row-key="name">
-                  <template v-slot:top>
-                      <div class="text-subtitle1">Estudiantes</div>
-                      <q-space />
-                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
-                      <q-space />
-                      <q-input borderless dense v-model="search.students" placeholder="Buscar">
-                          <template v-slot:append>
-                              <q-icon name="eva-search-outline" />
-                          </template>
-                      </q-input>
+      <div v-if="!show.students">
+        <q-table :filter="search.students" :data="data.students" :columns="columns" row-key="name">
+          <template v-slot:top>
+              <div class="text-subtitle1">Lista Estudiantes</div>
+              <q-space />
+              <q-btn :to="{name:'user.student.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
+              <q-space />
+              <q-input borderless dense v-model="search.students" placeholder="Buscar">
+                  <template v-slot:append>
+                      <q-icon name="eva-search-outline" />
                   </template>
-                  <template v-slot:body-cell-status="props">
-                      <q-td :props="props">
-                          <q-btn size="sm" v-if="props.row.status" dense  color="green" @click="handleChangeStatus(props)" >Activo</q-btn>
-                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-actions="props">
-                      <q-td :props="props">
-                          <q-btn dense round flat color="warning" @click="handleDetails(props)" icon="eva-file-text-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Mostrar OK Card
-                            </q-tooltip>
-                          </q-btn>
-                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Mostrar Detalles Usuario
-                            </q-tooltip>
-                          </q-btn>
-                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Editar Usuario
-                            </q-tooltip>
-                          </q-btn>
-                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Eliminar
-                            </q-tooltip>
-                          </q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-module="props">
-                      <q-td :props="props">
-                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
-                      </q-td>
-                  </template>
-                </q-table>
-            </q-tab-panel>
-            <q-tab-panel name="teachers">
-               <q-table :filter="search.teachers" :data="data.teachers" :columns="columns" row-key="name">
-                  <template v-slot:top>
-                      <div class="text-subtitle1">Docentes</div>
-                      <q-space />
-                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
-                      <q-space />
-                      <q-input borderless dense v-model="search.teachers" placeholder="Buscar">
-                          <template v-slot:append>
-                              <q-icon name="eva-search-outline" />
-                          </template>
-                      </q-input>
-                  </template>
-                  <template v-slot:body-cell-status="props">
-                      <q-td :props="props">
-                          <q-btn size="sm" v-if="props.row.status" dense color="green" @click="handleChangeStatus(props)" >Activo</q-btn>
-                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-actions="props">
-                      <q-td :props="props">
-                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Mostrar Detalles del Usuario
-                            </q-tooltip>
-                          </q-btn>
-                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Editar Usuario
-                            </q-tooltip>
-                          </q-btn>
-                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline">
-                            <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                              Eliminar Usuario
-                            </q-tooltip>
-                          </q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-module="props">
-                      <q-td :props="props">
-                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
-                      </q-td>
-                  </template>
-              </q-table>
-            </q-tab-panel>
-            <q-tab-panel name="admins">
-                <q-table :filter="search.admins" :data="data.admins" :columns="columns" row-key="name">
-                  <template v-slot:top>
-                      <div class="text-subtitle1">Administradores</div>
-                      <q-space />
-                      <q-btn :to="{name:'user.create'}" size="sm" rounded icon="eva-plus" color="primary" label="Crear" />
-                      <q-space />
-                      <q-input borderless dense v-model="search.admins" placeholder="Buscar">
-                          <template v-slot:append>
-                              <q-icon name="eva-search-outline" />
-                          </template>
-                      </q-input>
-                  </template>
-                  <template v-slot:body-cell-status="props">
-                      <q-td :props="props">
-                          <q-btn size="sm" v-if="props.row.status" dense color="green" @click="handleChangeStatus(props)">Activo</q-btn>
-                          <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-actions="props">
-                      <q-td :props="props">
-                          <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline"></q-btn>
-                          <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline"></q-btn>
-                          <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline"></q-btn>
-                      </q-td>
-                  </template>
-                  <template v-slot:body-cell-module="props">
-                      <q-td :props="props">
-                          <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
-                      </q-td>
-                  </template>
-              </q-table>
-            </q-tab-panel>
-          </q-tab-panels>
-        </q-card>
+              </q-input>
+          </template>
+          <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                  <q-btn size="sm" v-if="props.row.status" dense  color="green" @click="handleChangeStatus(props)" >Activo</q-btn>
+                  <q-btn size="sm" v-else dense color="red" @click="handleChangeStatus(props)" >Desactivado</q-btn>
+              </q-td>
+          </template>
+          <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                  <q-btn dense round flat color="warning" @click="handleDetails(props)" icon="eva-file-text-outline">
+                    <q-tooltip content-style="font-size: 11px" content-class="bg-yellow" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                      Mostrar OK Card
+                    </q-tooltip>
+                  </q-btn>
+                  <q-btn dense round flat color="secondary" @click="handleShow(props)" icon="eva-plus-outline">
+                    <q-tooltip content-style="font-size: 11px" content-class="bg-green" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                      Mostrar Detalles Usuario
+                    </q-tooltip>
+                  </q-btn>
+                  <q-btn dense round flat color="primary" @click="handleEdit(props)" icon="eva-edit-outline">
+                    <q-tooltip content-style="font-size: 11px" content-class="bg-blue" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                      Editar Usuario
+                    </q-tooltip>
+                  </q-btn>
+                  <q-btn dense round flat color="red" @click="handleDelete(props)" icon="eva-trash-2-outline">
+                    <q-tooltip content-style="font-size: 11px" content-class="bg-red" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                      Eliminar Usuario
+                    </q-tooltip>
+                  </q-btn>
+              </q-td>
+          </template>
+          <template v-slot:body-cell-module="props">
+              <q-td :props="props">
+                  <q-badge outline :color="props.row.sub_module?'primary':'red'" :label="handleGetModule(props.row)" />
+              </q-td>
+          </template>
+        </q-table>
       </div>
       <div v-else>
         <q-card style="max-width: 100%">
@@ -215,6 +121,15 @@
                                         <q-item-section>
                                             <q-item-label caption>Celular</q-item-label>
                                             <q-item-label>{{user.phone}}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section avatar>
+                                            <q-icon color="primary" name="eva-edit-outline" />
+                                        </q-item-section>
+                                        <q-item-section>
+                                            <q-item-label caption>Fecha Inicio</q-item-label>
+                                            <q-item-label>{{user.start_date}}</q-item-label>
                                         </q-item-section>
                                     </q-item>
                                     <q-item>
@@ -388,21 +303,7 @@ export default {
         data: false,
         students: false
       },
-      user: [],
-      tab: 'students',
-      loading: true,
-      number_process: 0
-    }
-  },
-  watch: {
-    number_process: function (newQuestion, oldQuestion) {
-      if (this.number_process === 3) {
-        this.loading = false
-        this.show.students = true
-      } else {
-        this.loading = true
-        this.show.students = false
-      }
+      user: []
     }
   },
   mounted () {
@@ -419,7 +320,6 @@ export default {
     handleShow (props) {
       this.show.data = true
       this.user = props.row
-      console.log(this.$values.api)
     },
     handleChangeStatus (props) {
       this.$q.dialog({
@@ -455,33 +355,19 @@ export default {
       })
     },
     handleGetData () {
-      this.number_process = 0
+      this.show.students = true
       var url = '/panel/user/get/users/'
-      this.$axios.get(url + 'admins').then(response => {
-        this.data.admins = response.data
-        this.data.admins.forEach((row, index) => {
-          row.index = index + 1
-        })
-        this.number_process++
-      })
-      this.$axios.get(url + 'teachers').then(response => {
-        this.data.teachers = response.data
-        this.data.teachers.forEach((row, index) => {
-          row.index = index + 1
-        })
-        this.number_process++
-      })
       this.$axios.get(url + 'students').then(response => {
         this.data.students = response.data
         this.data.students.forEach((row, index) => {
           row.index = index + 1
         })
-        this.number_process++
+        this.show.students = false
       })
     },
     handleEdit (props) {
       this.$router.push({
-        name: 'user.edit',
+        name: 'user.student.edit',
         params: {
           data: props.row
         }
@@ -521,12 +407,11 @@ export default {
       })
     },
     handleReload () {
-      this.number_process = 0
       this.handleGetData()
     },
     handleDetails (props) {
       this.$router.push({
-        name: 'user.detail',
+        name: 'user.student.detail',
         params: {
           student: props.row
         }

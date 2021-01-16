@@ -85,13 +85,6 @@
                           </q-input>
                         </div>
                          <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
-                            <q-file rounded dense v-model="image" label="Foto de Perfil">
-                              <template v-slot:prepend>
-                                <q-icon name="eva-attach-2-outline" />
-                              </template>
-                            </q-file>
-                        </div>
-                         <div class="col-xs-12 col-sm-6 col-md-6 q-pa-md">
                            <q-input rounded dense v-model="data.due_date" mask="date" label="Fecha Finalización" lazy-rules :rules="[ val => !!val || 'El campo es requerido']">
                               <template v-slot:prepend>
                                 <q-icon name="event" class="cursor-pointer">
@@ -247,39 +240,16 @@ export default {
       })
     },
     HandleUpdateUser (evt) {
-      if (this.image) {
-        const fd = new FormData()
-        fd.append('file', this.image)
-        this.$axios.post(
-          '/panel/user/post/upload',
-          fd,
-          { headers:
-                { 'Content-Type': 'multipart/form-data' }
-          }).then(response => {
-          this.data.image = response.data
-          var url = '/panel/user/post/update/user'
-          this.$axios.post(url, this.data).then(response => {
-            this.$router.push({ name: 'user.list' })
-            this.$q.notify({
-              color: 'positive',
-              message: '¡ Usuario Editado exitosamente !',
-              icon: 'eva-checkmark-circle-2-outline',
-              progress: true
-            })
-          })
+      var url = '/panel/user/post/update/user'
+      this.$axios.post(url, this.data).then(response => {
+        this.$router.push({ name: 'user.list' })
+        this.$q.notify({
+          color: 'positive',
+          message: '¡ Usuario Editado exitosamente !',
+          icon: 'eva-checkmark-circle-2-outline',
+          progress: true
         })
-      } else {
-        var url = '/panel/user/post/update/user'
-        this.$axios.post(url, this.data).then(response => {
-          this.$router.push({ name: 'user.list' })
-          this.$q.notify({
-            color: 'positive',
-            message: '¡ Usuario Editado exitosamente !',
-            icon: 'eva-checkmark-circle-2-outline',
-            progress: true
-          })
-        })
-      }
+      })
     },
     handleFormReset () {
       this.data.name = null

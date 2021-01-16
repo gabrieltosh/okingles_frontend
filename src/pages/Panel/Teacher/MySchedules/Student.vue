@@ -109,7 +109,7 @@
                     </q-avatar>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label lines="1">{{'.- '+ item.name}}</q-item-label>
+                    <q-item-label lines="1">{{item.name}}</q-item-label>
                     <q-item-label caption>{{item.created_at}}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
@@ -276,15 +276,32 @@
           </template>
           <template v-slot:body-cell-actions="props">
               <q-td :props="props">
-                  <q-btn dense round flat color="green" @click="handleShowDetailStudent(props)" icon="las la-plus-circle"></q-btn>
+                  <q-btn dense round flat color="primary" @click="handleGetTasks(props.row)" icon="eva-file-text-outline">
+                    <q-tooltip content-class="bg-primary" :offset="[10, 10]">
+                      Tareas
+                    </q-tooltip>
+                  </q-btn>
+                  <q-btn dense round flat color="green" @click="handleShowDetailStudent(props)" icon="las la-plus-circle">
+                    <q-tooltip content-class="bg-green" :offset="[10, 10]">
+                      Ver OK Card
+                    </q-tooltip>
+                  </q-btn>
                   <template v-if="!props.row.absent">
                       <template v-if="!props.row.skills_id">
-                          <q-btn dense round flat color="primary" @click="handleShowSkill(props)" icon="las la-check-circle"></q-btn>
+                          <q-btn dense round flat color="primary" @click="handleShowSkill(props)" icon="las la-check-circle">
+                            <q-tooltip content-class="bg-primary" :offset="[10, 10]">
+                              Calificar Clase
+                            </q-tooltip>
+                          </q-btn>
                       </template>
                   </template>
                   <template v-if="!props.row.absent">
                       <template v-if="!props.row.skills_id">
-                          <q-btn dense round flat color="red" @click="handleStoreStudentAbsent(props)" icon="las la-times-circle"></q-btn>
+                          <q-btn dense round flat color="red" @click="handleStoreStudentAbsent(props)" icon="las la-times-circle">
+                            <q-tooltip content-class="bg-red" :offset="[10, 10]">
+                              Establecer Falta
+                            </q-tooltip>
+                          </q-btn>
                       </template>
                   </template>
               </q-td>
@@ -292,76 +309,115 @@
       </q-table>
     </div>
     <q-dialog v-model="show.skill">
-        <q-card style="width: 310px">
-            <q-card-section class="theme-color text-white" align="center">
-                <div class="text-h6">Estudiante {{data.assignment_student.student.name+' '+data.assignment_student.student.lastname}}</div>
-            </q-card-section>
-            <q-card-section class="q-py-none ">
-                <div class="row">
-                    <div class="col-12">
-                      <q-item>
-                        <q-item-section>
-                          <q-item-label>
-                            <q-select
-                                dense
-                                v-model="data.store.detail_lesson_id"
-                                :options="data.lessons"
-                                label="Lección Especifica"
-                                emit-value
-                                map-options
-                                clearable rounded
-                            >
-                              <template v-slot:prepend>
-                                    <q-icon name="eva-people-outline" />
-                                </template>
-                            </q-select>
-                          </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </div>
-                    <div class="col-12">
-                        <q-item>
-                            <q-item-section>
-                                <q-item-label>
-                                    <q-select dense v-model="data.store.skills_id" :options="data.skills" label="Seleccionar habilidad" emit-value map-options  clearable rounded >
-                                        <template v-slot:prepend>
-                                            <q-icon name="eva-bookmark-outline" />
-                                        </template>
-                                    </q-select>
-                                </q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </div>
-                    <div class="col-12 q-pt-sm">
-                        <q-item>
-                             <q-item-section side>
-                                <q-icon color="orange-12" name="eva-settings-2-outline" />
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label>
-                                   <q-slider
-                                        v-model="data.store.percentage"
-                                        :min="0"
-                                        :max="100"
-                                        :step="5"
-                                        label
-                                        label-always
-                                        color="orange-12"
-                                         :label-value="data.store.percentage + ' %'"
-                                        />
-                                </q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </div>
+      <q-card style="width: 310px">
+        <q-card-section class="theme-color text-white" align="center">
+            <div class="text-h6">Estudiante {{data.assignment_student.student.name+' '+data.assignment_student.student.lastname}}</div>
+        </q-card-section>
+        <q-card-section class="q-py-none ">
+            <div class="row">
+                <div class="col-12">
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>
+                        <q-select
+                            dense
+                            v-model="data.store.detail_lesson_id"
+                            :options="data.lessons"
+                            label="Lección Especifica"
+                            emit-value
+                            map-options
+                            clearable rounded
+                        >
+                          <template v-slot:prepend>
+                                <q-icon name="eva-people-outline" />
+                            </template>
+                        </q-select>
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
                 </div>
-            </q-card-section>
-            <q-card-actions align="center" class="bg-white text-teal">
-                <q-btn flat label="Cancelar" v-close-popup class="text-grey-8"/>
-                <q-btn @click="handleStoreSkill()" label="Guardar" color="primary" />
-            </q-card-actions>
-        </q-card>
+                <div class="col-12">
+                    <q-item>
+                        <q-item-section>
+                            <q-item-label>
+                                <q-select dense v-model="data.store.skills_id" :options="data.skills" label="Seleccionar habilidad" emit-value map-options  clearable rounded >
+                                    <template v-slot:prepend>
+                                        <q-icon name="eva-bookmark-outline" />
+                                    </template>
+                                </q-select>
+                            </q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </div>
+                <div class="col-12 q-pt-sm">
+                    <q-item>
+                          <q-item-section side>
+                            <q-icon color="orange-12" name="eva-settings-2-outline" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>
+                                <q-slider
+                                    v-model="data.store.percentage"
+                                    :min="0"
+                                    :max="100"
+                                    :step="5"
+                                    label
+                                    label-always
+                                    color="orange-12"
+                                      :label-value="data.store.percentage + ' %'"
+                                    />
+                            </q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </div>
+            </div>
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+            <q-btn flat label="Cancelar" v-close-popup class="text-grey-8"/>
+            <q-btn @click="handleStoreSkill()" label="Guardar" color="primary" />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
 
+    <q-dialog v-model="dialog.tasks">
+      <q-card style="width: 310px">
+        <q-card-section class="theme-color text-white" align="center">
+            <div class="text-subtitle2">Tareas del Estudiante {{this.data.student.name+' '+this.data.student.lastname}}</div>
+        </q-card-section>
+        <q-card-section class="q-py-none ">
+          <div class="row">
+            <div class="col-12">
+              <q-item  v-ripple  v-for="(item,index) in data.tasks" :key="index">
+                <q-item-section avatar top>
+                  <q-avatar rounded >
+                      <img :src="require('../../../../statics/images/modules/teacher/materials/'+handleIconFile(GetFileExtension(item.file_name)))">
+                  </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label lines="1">{{(1+index)+'.- '+ item.description}}</q-item-label>
+                  <q-item-label caption>{{item.created_at}}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-badge outline align="middle" color="teal">
+                    {{GetFileExtension(item.file_name)}}
+                  </q-badge>
+                </q-item-section>
+                <q-item-section side>
+                  <q-btn @click="handleShowTask(item)" dense round flat color="primary" icon="eva-search-outline">
+                      <q-tooltip content-class="bg-blue" :offset="[10, 10]">
+                      Ver archivo
+                    </q-tooltip>
+                  </q-btn>
+                </q-item-section>
+              </q-item>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancelar" v-close-popup class="text-grey-8"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-dialog
       v-model="dialog.doc"
       persistent
@@ -505,6 +561,7 @@ export default {
       ],
       data: {
         students: [],
+        student: [],
         skills: [],
         store: {
           skills_id: null,
@@ -542,7 +599,8 @@ export default {
         pdf: false,
         audio: false,
         video: false,
-        questionnaire: false
+        questionnaire: false,
+        tasks: false
       }
     }
   },
@@ -555,6 +613,65 @@ export default {
     this.handleGetQuestionnaires()
   },
   methods: {
+    handleShowTask (item) {
+      this.src = null
+      this.src = this.$values.api + 'app/tasks/' + item.file_name
+      this.dialog.tasks = false
+      switch (this.GetFileExtension(item.file_name)) {
+        case 'mp4':
+          this.dialog.video = true
+          break
+        case 'mp3':
+          this.dialog.audio = true
+          break
+        case 'pdf':
+          this.dialog.pdf = true
+          break
+        case 'pptx':
+        case 'pptm':
+        case 'ppt':
+        case 'xlsx':
+        case 'xlsm':
+        case 'xlsb':
+        case 'xltx':
+        case 'docx':
+        case 'docm':
+        case 'dotx':
+        case 'dtm':
+          this.dialog.doc = true
+          break
+        case 'jpeg':
+        case 'jpg':
+        case 'gif':
+        case 'raw':
+        case 'bmp':
+        case 'png':
+          this.$viewer.show()
+          this.dialog.show = false
+          break
+        default:
+          this.$q.notify({
+            color: 'warning',
+            icon: 'announcement',
+            message: 'No se puede abrir el archivo'
+          })
+          break
+      }
+    },
+    GetFileExtension (filename) {
+      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+    },
+    handleGetTasks (data) {
+      this.data.student = data.student
+      var url = '/student/post/myclass/task'
+      this.$axios.post(url, {
+        student_id: data.student.id,
+        schedule_id: this.$route.params.schedule.id
+      }).then(response => {
+        this.data.tasks = response.data
+        this.dialog.tasks = true
+      })
+    },
     inited (viewer) {
       this.$viewer = viewer
     },
